@@ -12,6 +12,7 @@ class Food(models.Model):
         return f"{self.name} contributed {self.calories} calories."
 
 class Log(models.Model):
+    username = models.CharField(max_length=50)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('Date published')
 
