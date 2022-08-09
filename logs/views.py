@@ -1,6 +1,5 @@
 from django.http import HttpResponse
-from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Log
 
@@ -13,12 +12,10 @@ def index(request):
 
 
 def detail(request, log_id):
-    context = {}
-    try:
-        log = Log.objects.get(pk=log_id)
-        context['log'] = log
-    except Log.DoesNotExist:
-        raise Http404("Question does not exist")
+    log = get_object_or_404(Log, pk=log_id)
+    context = {
+        'log': log
+    }
 
     return render(request, 'logs/detail.html', context)
 
