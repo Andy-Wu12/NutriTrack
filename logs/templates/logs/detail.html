@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Log #{{ log.id }} </title>
+</head>
+<body>
+    <main class="food-log">
+        <div class="food-log-container">
+            <h1 class="food-log-text"> Name: {{ log.food.name }} </h1>
+            <p class="food-log-text"> Description: {{ log.food.desc }} </p>
+            <br/>
+            <!-- Can potentially add image(s) here -->
+            <h2 class="food-log-text"> Author: {{ log.username }} </h2>
+            <h3 class="food-log-text"> Published: {{ log.pub_date }} </h3>
+            <br/>
+        </div>
+    </main>
+</body>
+</html>
