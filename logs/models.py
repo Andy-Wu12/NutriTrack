@@ -17,4 +17,4 @@ class Log(models.Model):
     pub_date = models.DateTimeField('Date published')
 
     def __str__(self):
-        return f"You ate {self.food.name} on {self.pub_date.date()}."
+        return f"{self.username} ate {self.food.name} on {self.pub_date.date()}."

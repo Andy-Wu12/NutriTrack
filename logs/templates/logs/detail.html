@@ -2,17 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> Log #{{ log.id }} </title>
+    <title> {{ log.username }}'s Food Log </title>
 </head>
 <body>
-    <main class="food-log">
-        <div class="food-log-container">
-            <h1 class="food-log-text"> Name: {{ log.food.name }} </h1>
-            <p class="food-log-text"> Description: {{ log.food.desc }} </p>
+    <main class="food-log-data">
+        <div class="log-container">
+            <h1> Name: {{ log.food.name }} </h1>
+            <div class="log-body">
+                <p>
+                    Description: {{ log.food.desc }} <br/>
+                    Ingredients: {{ log.food.ingredients }} <br/>
+                    Calories: {{ log.food.calories }}
+                </p>
+            </div>
             <br/>
             <!-- Can potentially add image(s) here -->
-            <h2 class="food-log-text"> Author: {{ log.username }} </h2>
-            <h3 class="food-log-text"> Published: {{ log.pub_date }} </h3>
+            <div class="log-footer">
+                <h2> Author: {{ log.username }} </h2>
+                <h3> Published: {{ log.pub_date }} </h3>
+            </div>
             <br/>
         </div>
     </main>
