@@ -13,7 +13,7 @@
                 <ul>
                     {% for log in latest_logs %}
                         <li>
-                            <a href="/logs/{{ log.id }}">
+                            <a href="{% url 'logs:detail' log.id %}">
                                 {{ log.username }} ate {{ log.food.name }} on {{ log.pub_date.date }}
                             </a>
                         </li>
