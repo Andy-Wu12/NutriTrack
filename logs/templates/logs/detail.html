@@ -24,5 +24,19 @@
             <br/>
         </div>
     </main>
+    {% if comment_list %}
+        <section id="comments-container">
+            {% for comment in comment_list %}
+                <p class="comment"> {{ comment }} </p>
+            {% endfor %}
+        </section>
+    {% endif %}
+    <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
+        {% csrf_token %}
+        <label for="comment-text"> Comment: </label>
+        <textarea minlength="1" id="comment-text" name="comment-text"
+                  placeholder="Leave your comment here" required> </textarea>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
