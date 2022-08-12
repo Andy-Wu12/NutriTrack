@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+# Custom User model
+# from accounts.models import Account
 
 
 # Create your models here.
@@ -11,10 +15,11 @@ class Food(models.Model):
     def __str__(self):
         return f"{self.name} contributed {self.calories} calories."
 
+
 class Log(models.Model):
-    username = models.CharField(max_length=50)
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    user_acc = models.ForeignKey(User, on_delete=models.CASCADE)
+    food = models.OneToOneField(Food, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('Date published')
 
     def __str__(self):
-        return f"{self.username} ate {self.food.name} on {self.pub_date.date()}."
+        return f"{self.user_acc.username} ate {self.food.name} on {self.pub_date.date()}."
