@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title> Food Log List </title>
+</head>
+<body>
+    <main class="main-content">
+        <section class="food-log-list">
+            {% if latest_logs %}
+                <ul>
+                    {% for log in latest_logs %}
+                        <li>
+                            <a href="{% url 'logs:detail' log.id %}">
+                                {{ log.username }} ate {{ log.food.name }} on {{ log.pub_date.date }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No food logs are available! </p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
