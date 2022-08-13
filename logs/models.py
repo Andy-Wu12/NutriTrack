@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -38,4 +38,5 @@ class Comment(models.Model):
         return f"{self.creator} said {self.comment} on {self.pub_date.date()} "
 
     def is_recent(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - timedelta(days=1) <= self.pub_date <= now
