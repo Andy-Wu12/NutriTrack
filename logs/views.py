@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from .models import Log, Comment
 
+# Should list all logs globally like some sort of home page feed
 def index(request):
     latest_logs = Log.objects.order_by('-pub_date')
     context = {

@@ -1,8 +1,11 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.utils import timezone
+
 # Custom User model
-# from accounts.models import Account
 
 
 # Create your models here.
@@ -24,6 +27,7 @@ class Log(models.Model):
     def __str__(self):
         return f"{self.user_acc.username} ate {self.food.name} on {self.pub_date.date()}."
 
+
 class Comment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     log = models.ForeignKey(Log, on_delete=models.CASCADE)
@@ -32,3 +36,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.creator} said {self.comment} on {self.pub_date.date()} "
+
+    def is_recent(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
