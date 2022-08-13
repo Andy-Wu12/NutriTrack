@@ -27,11 +27,14 @@ def detail(request, log_id):
 
 
 def comment(request, log_id):
+    log = get_object_or_404(Log, pk=log_id)
+
     try:
         comment_data = request.POST['comment-text']
-
     except (KeyError, Comment.DoesNotExist):
-        return render(request, 'logs/detail.html', {'log': get_object_or_404(Log, pk=log_id)})
+        return render(request, 'logs/detail.html', {'log': log,
+                                                    'comment_list': log.comment_set.all(),
+                                                    'error_message': 'Error getting comment data. Please try again!'})
     # Get user currently signed in
         # Placeholder for now is to use admin account
     if len(comment_data.strip()) > 0:
