@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from .models import Log, Comment
 
+
 # Should list all logs globally like some sort of home page feed
 def index(request):
     latest_logs = Log.objects.order_by('-pub_date')

@@ -5,27 +5,25 @@ from django.contrib.auth.models import User
 
 from django.utils import timezone
 
-# Custom User model
-
 
 # Create your models here.
 class Food(models.Model):
     name = models.CharField(max_length=200)
     desc = models.CharField('description', max_length=1000)
-    ingredients = models.CharField(max_length=500)
-    calories = models.IntegerField(default=0)
+    ingredients = models.CharField(max_length=500, null=True)
+    calories = models.IntegerField(default=0, null=True)
 
     def __str__(self):
         return f"{self.name} contributed {self.calories} calories."
 
 
 class Log(models.Model):
-    user_acc = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
     food = models.OneToOneField(Food, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('Date published')
 
     def __str__(self):
-        return f"{self.user_acc.username} ate {self.food.name} on {self.pub_date.date()}."
+        return f"{self.creator.username} ate {self.food.name} on {self.pub_date.date()}."
 
 
 class Comment(models.Model):
