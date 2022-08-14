@@ -51,16 +51,27 @@ def create_log(creator: User, food: Food, pub_date: datetime, save=False):
 
 
 def create_comment(creator: User, assoc_log: Log, comment_text: str,
-                   day_offset: int, save=False):
+                   day_offset: int, past=True, save=False):
     """
     Create a comment with an optional associated user, associated log,
     `comment_text` and published the given number of `date_offset` to now
     (negative for comments published in the past,
     positive for comments that have yet to be published).
     """
-    time = timezone.now() + timedelta(days=day_offset)
+    time = timezone.now()
+    if past:
+        time = time - timedelta(days=day_offset)
+    else:
+        time = time + timedelta(days=day_offset)
     return Comment.objects.create(user=creator, assoc_log=assoc_log,
                                   comment=comment_text, pub_date=time)
+
+
+def create_default_log():
+    food = create_food('test food', 'test desc', save=True)
+    user = create_user('awu', save=True)
+    log = create_log(user, food, timezone.now(), save=True)
+    return log
 
 
 # Create your tests here.
@@ -113,9 +124,7 @@ class LogIndexViewTests(TestCase):
         """
         Created log should exist in log index
         """
-        food = create_food('test food', 'test desc', save=True)
-        user = create_user('awu', save=True)
-        log = create_log(user, food, timezone.now(), save=True)
+        log = create_default_log()
 
         response = self.client.get(reverse('logs:index'))
         self.assertEqual(response.status_code, 200)
@@ -139,3 +148,54 @@ class LogIndexViewTests(TestCase):
         self.assertEqual(len(logs), num_iterations)
         self.assertNotContains(response, "No logs are available")
         self.assertQuerysetEqual(response.context['latest_logs'], logs, ordered=False)
+
+
+class LogDetailViewTests(TestCase):
+    def test_log_no_comment(self):
+        """
+        If no comments exist for a specific (and existing) log,
+        an appropriate message is displayed.
+        """
+        log = create_default_log()
+
+        response = self.client.get(reverse('logs:detail', args=(log.id, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Be the first to comment.")
+        self.assertQuerysetEqual(response.context['log'], [log])
+        self.assertQuerysetEqual(response.context['comment_list'], [])
+
+    def test_past_comment(self):
+        """
+        Comments from the past SHOULD be rendered
+        """
+        log = create_default_log()
+        day_offset = random.randint(1, 365)
+        # Comment creator can be anyone, set as log creator for test simplicity
+        comment = create_comment(log.creator, log, 'past comment',
+                                 day_offset, past=True, save=True)
+
+        response = self.client.get(reverse('logs:detail', args=(log.id, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Be the first to comment.")
+        self.assertQuerysetEqual(response.context['log'], [log])
+        self.assertQuerysetEqual(response.context['comment_list'], [comment])
+
+    def test_future_comment(self):
+        """
+        A comment from the future should not be rendered ... yet
+        """
+        pass
+
+    def test_past_and_future_comments(self):
+        """
+        If database contains past/present AND future comments,
+        it should only render those not from the future.
+        """
+        pass
+
+    def test_multiple_comments(self):
+        """
+        All past and present comments should be rendered
+        """
+        pass
+
