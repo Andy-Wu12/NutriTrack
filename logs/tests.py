@@ -63,7 +63,7 @@ def create_comment(creator: User, assoc_log: Log, comment_text: str,
         time = time - timedelta(days=day_offset)
     else:
         time = time + timedelta(days=day_offset)
-    return Comment.objects.create(user=creator, assoc_log=assoc_log,
+    return Comment.objects.create(creator=creator, log=assoc_log,
                                   comment=comment_text, pub_date=time)
 
 
@@ -161,7 +161,7 @@ class LogDetailViewTests(TestCase):
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Be the first to comment.")
-        self.assertQuerysetEqual(response.context['log'], [log])
+        self.assertEqual(response.context['log'], log)
         self.assertQuerysetEqual(response.context['comment_list'], [])
 
     def test_past_comment(self):
@@ -177,14 +177,24 @@ class LogDetailViewTests(TestCase):
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Be the first to comment.")
-        self.assertQuerysetEqual(response.context['log'], [log])
+        self.assertEqual(response.context['log'], log)
         self.assertQuerysetEqual(response.context['comment_list'], [comment])
 
     def test_future_comment(self):
         """
         A comment from the future should not be rendered ... yet
         """
-        pass
+        log = create_default_log()
+        day_offset = random.randint(1, 365)
+        # Comment creator can be anyone, set as log creator for test simplicity
+        comment = create_comment(log.creator, log, 'past comment',
+                                 day_offset, past=False, save=True)
+
+        response = self.client.get(reverse('logs:detail', args=(log.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Be the first to comment.")
+        self.assertEqual(response.context['log'], log)
+        self.assertQuerysetEqual(response.context['comment_list'], [])
 
     def test_past_and_future_comments(self):
         """
