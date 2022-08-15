@@ -24,13 +24,15 @@
             <br/>
         </div>
     </main>
-    {% if comment_list %}
-        <section id="comments-container">
+    <section id="comments-container">
+        {% if comment_list %}
             {% for comment in comment_list %}
                 <p class="comment"> {{ comment }} </p>
             {% endfor %}
-        </section>
-    {% endif %}
+        {% else %}
+            <p id="no-comments-message"> Be the first to comment. </p>
+        {% endif %}
+    </section>
     <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
         {% csrf_token %}
         <label for="comment-text"> Comment: </label>
@@ -38,5 +40,8 @@
                   placeholder="Leave your comment here" required></textarea>
         <input type="submit" value="Submit">
     </form>
+    {% if error_message %}
+        <p> {{ error_message }}</p>
+    {% endif %}
 </body>
 </html>
