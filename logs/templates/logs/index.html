@@ -14,7 +14,7 @@
                     {% for log in latest_logs %}
                         <li>
                             <a href="{% url 'logs:detail' log.id %}">
-                                {{ log.username }} ate {{ log.food.name }} on {{ log.pub_date.date }}
+                                {{ log.creator.username }} ate {{ log.food.name }} on {{ log.pub_date.date }}
                             </a>
                         </li>
                     {% endfor %}
