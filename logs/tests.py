@@ -128,7 +128,7 @@ class LogIndexViewTests(TestCase):
 
         response = self.client.get(reverse('logs:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, "No logs are available")
+        self.assertNotContains(response, "No logs are available.")
         self.assertQuerysetEqual(response.context['latest_logs'], [log])
 
     def test_multiple_logs(self):
@@ -146,7 +146,7 @@ class LogIndexViewTests(TestCase):
         response = self.client.get(reverse('logs:index'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(logs), num_iterations)
-        self.assertNotContains(response, "No logs are available")
+        self.assertNotContains(response, "No logs are available.")
         self.assertQuerysetEqual(response.context['latest_logs'], logs, ordered=False)
 
 
