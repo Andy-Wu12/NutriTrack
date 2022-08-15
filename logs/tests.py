@@ -51,7 +51,7 @@ def create_log(creator: User, food: Food, pub_date: datetime, save=False):
 
 
 def create_comment(creator: User, assoc_log: Log, comment_text: str,
-                   day_offset: int, past=True, save=False):
+                   day_offset: int, past=True):
     """
     Create a comment with an optional associated user, associated log,
     `comment_text` and published the given number of `date_offset` to now
@@ -172,7 +172,7 @@ class LogDetailViewTests(TestCase):
         day_offset = random.randint(1, 365)
         # Comment creator can be anyone, set as log creator for test simplicity
         comment = create_comment(log.creator, log, 'past comment',
-                                 day_offset, past=True, save=True)
+                                 day_offset, past=True)
 
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertEqual(response.status_code, 200)
@@ -186,9 +186,8 @@ class LogDetailViewTests(TestCase):
         """
         log = create_default_log()
         day_offset = random.randint(1, 365)
-        # Comment creator can be anyone, set as log creator for test simplicity
-        comment = create_comment(log.creator, log, 'past comment',
-                                 day_offset, past=False, save=True)
+        create_comment(log.creator, log, 'past comment',
+                       day_offset, past=False)
 
         response = self.client.get(reverse('logs:detail', args=(log.id,)))
         self.assertEqual(response.status_code, 200)
@@ -201,11 +200,32 @@ class LogDetailViewTests(TestCase):
         If database contains past/present AND future comments,
         it should only render those not from the future.
         """
-        pass
+        log = create_default_log()
+        day_offset = random.randint(1, 365)
+        past_comment = create_comment(log.creator, log, 'this is the past',
+                                      day_offset, past=True)
+        create_comment(log.creator, log, 'this is the future',
+                       day_offset, past=False)
+
+        response = self.client.get(reverse('logs:detail', args=(log.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Be the first to comment.")
+        self.assertEqual(response.context['log'], log)
+        self.assertQuerysetEqual(response.context['comment_list'], [past_comment])
 
     def test_multiple_comments(self):
         """
         All past and present comments should be rendered
         """
-        pass
+        comments = []
+        num_comments = 50
+        log = create_default_log()
+        day_offset = random.randint(1, 365)
+        for i in range(num_comments):
+            comments.append(create_comment(log.creator, log, 'this is the past',
+                            day_offset, past=True))
 
+        response = self.client.get(reverse('logs:detail', args=(log.id,)))
+        self.assertNotContains(response, "Be the first to comment.")
+        self.assertEqual(response.context['log'], log)
+        self.assertQuerysetEqual(response.context['comment_list'], comments, ordered=False)
