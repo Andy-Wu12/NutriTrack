@@ -2,44 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> {{ log.username }}'s Food Log </title>
+    <title> {{ log.creator.username }}'s Food Log </title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
 </head>
 <body>
     <main class="food-log-data">
         <div class="log-container">
-            <h1> Name: {{ log.food.name }} </h1>
+            <h1> {{ log.food.name }} </h1>
             <div class="log-body">
-                <p>
-                    Description: {{ log.food.desc }} <br/>
-                    Ingredients: {{ log.food.ingredients }} <br/>
-                    Calories: {{ log.food.calories }}
-                </p>
+                <div class="log-food-info">
+                    <h2 class="body-header"> Description </h2>
+                    <p class="body-text"> {{ log.food.desc }} </p>
+                    <h2 class="body-header"> Ingredients </h2>
+                    <p class="body-text"> {{ log.food.ingredients }} </p>
+                    <h2 class="body-header"> Calories: {{ log.food.calories }} </h2>
+                </div>
             </div>
             <br/>
             <!-- Can potentially add image(s) here -->
             <div class="log-footer">
-                <h2> Author: {{ log.username }} </h2>
-                <h3> Published: {{ log.pub_date }} </h3>
+                <p>
+                    {{ log.creator.username }}
+                    <br>
+                    {{ log.pub_date }}
+                </p>
             </div>
             <br/>
         </div>
     </main>
-    <section id="comments-container">
+
+    <section id="comments">
+        <h2 id="comment-header"> {{ comment_list|length }} Comments </h2>
+        <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
+            {% csrf_token %}
+            <label for="comment-text"></label>
+            <textarea minlength="1" id="comment-text" name="comment-text"
+                      placeholder="Add a comment" required></textarea>
+            <br/>
+            <button type="submit"> Comment </button>
+        </form>
+        <br/>
         {% if comment_list %}
-            {% for comment in comment_list %}
-                <p class="comment"> {{ comment }} </p>
-            {% endfor %}
+            <div id="comment-list-container">
+                {% for comment in comment_list %}
+                    <div class="post-container">
+                        <div class="post-header">
+                            <img alt="Default Icon" class="profile-icon"
+                                 src="{% static 'logs/images/default-avatar.jpg' %}"/>
+                        </div>
+                        <div class="post-body">
+                            <div class="post-body-data">
+                                <div class="username-text"> {{ comment.creator.username }} </div>
+                                <div class="comment-date"> {{ comment.pub_date.date }} </div>
+                            </div>
+                            <p class="comment-body"> {{ comment.comment }} </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <p id="no-comments-message"> Be the first to comment. </p>
         {% endif %}
     </section>
-    <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
-        {% csrf_token %}
-        <label for="comment-text"> Comment: </label>
-        <textarea minlength="1" id="comment-text" name="comment-text"
-                  placeholder="Leave your comment here" required></textarea>
-        <input type="submit" value="Submit">
-    </form>
     {% if error_message %}
         <p> {{ error_message }}</p>
     {% endif %}
