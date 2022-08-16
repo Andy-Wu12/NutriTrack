@@ -1,0 +1,32 @@
+
+/* Default input textarea box size */
+textarea {
+    min-width: 80%;
+    min-height: 2em;
+}
+
+/* Comment form */
+form > button {
+    background-color: #56a3fa;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 10pt;
+}
+
+form > button:hover {
+    border: 1px solid black;
+}
+
+form > button:active {
+    border: 3px solid black;
+}
+
+/* Comments */
+.username-text {
+    color: cornflowerblue;
+}
+
+.comment-date {
+    color: grey;
+}

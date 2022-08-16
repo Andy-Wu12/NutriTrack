@@ -1,56 +1,8 @@
-@import 'style.css';
-
-:root {
-    --body-font-size: clamp(11pt, 16pt, 18pt);
-}
-
-/* Log container and components */
-.log-container {
-    font-size: var(--body-font-size);
-    text-align: center;
-    /*background-color: antiquewhite;*/
-    border: 1px solid black;
-    border-radius: 5%;
-    margin: 0 10px;
-}
-
-.log-food-info {
-    margin: 0 15px;
-/*    padding-left: 15px;
-    padding-right: 15px;*/
-    font-size: calc(var(--body-font-size) - 5pt);
-    text-align: left;
-}
-
-.body-text {
-    margin: 0 15px;
-    padding: 5px;
-    background-color: white;
-}
-
-.log-footer {
-    font-size: calc(var(--body-font-size) - 5pt) ;
-}
-
-/* Comment container and components */
-#comment-header, #comment-form {
-    text-align: center;
-}
-
-#comment-list-container {
-    padding-bottom: 10px;
-}
-
 .post-container {
     display: grid;
     justify-content: center;
+    /* Put space between icon and container text */
     grid-gap: 5px;
+    margin-bottom: 5px;
     grid-template-columns: var(--icon-size) 70%;
 }
-
-/* Put comment date next to poster name */
-.post-body-data {
-    display: inline-flex;
-    gap: 5px;
-}
-
