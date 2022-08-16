@@ -1,3 +1,21 @@
 li a {
     color: green;
 }
+
+/* Default input textarea box size */
+textarea {
+    min-width: 80%;
+    min-height: 2em;
+}
+
+form > button {
+    background-color: #56a3fa;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 10pt;
+}
+
+form > button:hover {
+    border: 2px
+}
