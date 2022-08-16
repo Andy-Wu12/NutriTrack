@@ -54,8 +54,10 @@
                                  src="{% static 'logs/images/default-avatar.jpg' %}"/>
                         </div>
                         <div class="post-body">
-                            <div class="username-text"> {{ comment.creator.username }} </div>
-                            <div class="comment-date"> {{ comment.pub_date.date }} </div>
+                            <div class="post-body-data">
+                                <div class="username-text"> {{ comment.creator.username }} </div>
+                                <div class="comment-date"> {{ comment.pub_date.date }} </div>
+                            </div>
                             <p class="comment-body"> {{ comment.comment }} </p>
                         </div>
                     </div>

@@ -30,3 +30,11 @@ img.profile-icon {
     width: var(--icon-size);
     height: var(--icon-size);
 }
+
+.username-text {
+    color: cornflowerblue;
+}
+
+.comment-date {
+    color: grey;
+}

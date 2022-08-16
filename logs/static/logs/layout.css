@@ -44,7 +44,13 @@
 .post-container {
     display: grid;
     justify-content: center;
+    grid-gap: 5px;
     grid-template-columns: var(--icon-size) 70%;
 }
 
+/* Put comment date next to poster name */
+.post-body-data {
+    display: inline-flex;
+    gap: 5px;
+}
 
