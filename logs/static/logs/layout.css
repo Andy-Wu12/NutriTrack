@@ -1,3 +1,5 @@
+@import 'style.css';
+
 :root {
     --body-font-size: clamp(11pt, 16pt, 18pt);
 }
@@ -35,6 +37,14 @@
     text-align: center;
 }
 
-#comments-container {
-
+#comment-list-container {
+    padding-bottom: 10px;
 }
+
+.post-container {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: var(--icon-size) 70%;
+}
+
+

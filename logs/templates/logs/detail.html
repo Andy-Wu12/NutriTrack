@@ -6,7 +6,7 @@
 
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-layout.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
 </head>
 <body>
     <main class="food-log-data">
@@ -46,9 +46,19 @@
         </form>
         <br/>
         {% if comment_list %}
-            <div id="comments-container">
+            <div id="comment-list-container">
                 {% for comment in comment_list %}
-                    <p class="comment"> {{ comment }} </p>
+                    <div class="post-container">
+                        <div class="post-header">
+                            <img alt="Default Icon" class="profile-icon"
+                                 src="{% static 'logs/images/default-avatar.jpg' %}"/>
+                        </div>
+                        <div class="post-body">
+                            <div class="username-text"> {{ comment.creator.username }} </div>
+                            <div class="comment-date"> {{ comment.pub_date.date }} </div>
+                            <p class="comment-body"> {{ comment.comment }} </p>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         {% else %}

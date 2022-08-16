@@ -1,5 +1,5 @@
-li a {
-    color: green;
+:root {
+    --icon-size: 50px;
 }
 
 /* Default input textarea box size */
@@ -8,6 +8,7 @@ textarea {
     min-height: 2em;
 }
 
+/* Comment form */
 form > button {
     background-color: #56a3fa;
     border: none;
@@ -17,5 +18,15 @@ form > button {
 }
 
 form > button:hover {
-    border: 2px
+    border: 1px solid black;
+}
+
+form > button:active {
+    border: 3px solid black;
+}
+
+/* Comments */
+img.profile-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
 }
