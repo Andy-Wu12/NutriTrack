@@ -7,17 +7,30 @@
 
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/index-style.css' %}">
 </head>
 <body>
+    <h1> Food Logs </h1>
     <main class="main-content">
-        <section class="food-log-list">
+        <section class="food-log-data">
             {% if latest_logs %}
-                <ul>
+                <ul class="food-log-list">
                     {% for log in latest_logs %}
                         <li>
-                            <a href="{% url 'logs:detail' log.id %}">
-                                {{ log.creator.username }} ate {{ log.food.name }} on {{ log.pub_date.date }}
-                            </a>
+                            <div class="post-container">
+                                <img class="profile-icon" alt='user-icon'
+                                     src="{% static 'logs/images/default-avatar.jpg' %}"/>
+                                <div class="log-body">
+                                    <p>
+                                        {{ log.creator.username }} uploaded
+                                        <a href="{% url 'logs:detail' log.id %}">
+                                            {{ log.food.name }}
+                                        </a>
+                                        log on {{ log.pub_date.date }}
+                                    </p>
+                                </div>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>

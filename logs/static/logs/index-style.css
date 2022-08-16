@@ -1,0 +1,21 @@
+:root {
+    --link-default-color: #7bd3f7;
+    --link-hover-color: #48b4e0;
+}
+
+h1 {
+    text-align: center;
+}
+
+.food-log-list {
+    list-style: none;
+}
+
+.food-log > a:hover {
+    color: var(--link-hover-color);
+}
+
+.food-log {
+    background-color: antiquewhite;
+    margin-bottom: 10px;
+}
