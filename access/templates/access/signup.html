@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Sign Up </title>
+
+    {% load static %}
+</head>
+<body>
+    <main class="access-form">
+        <h2 id="signup-form-header"> Signup </h2>
+        <form id="signup-form" action="{% url 'access:signup' %}" method="post">
+            {% csrf_token %}
+            <label for="username-input"></label>
+            <input type="text" minlength="1" id="username-input" name="username"
+                      placeholder="Add a comment" required/>
+            <br/>
+            <label for="email-input"></label>
+            <input type="email" id="email-input" name="email"
+                      placeholder="Add a comment" required/>
+            <br/>
+            <label for="password-input"></label>
+            <input type="password" minlength="8" id="email-input" name="email"
+                      placeholder="Add a comment" required/>
+            <button type="submit"> Sign Up </button>
+        </form>
+    </main>
+</body>
+</html>
