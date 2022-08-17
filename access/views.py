@@ -28,10 +28,9 @@ def signup_post(request):
     except KeyError:
         return HttpResponseRedirect(reverse('access:signup'))
 
-    user = User(
-        username=uname, email=email, password=make_password(password)
+    User.objects.create_user(
+        username=uname, email=email, password=password
     )
-    user.save()
 
     # TODO: Need to provide session information in the future
     return HttpResponseRedirect(reverse('logs:index'))
