@@ -9,21 +9,22 @@
 <body>
     <main class="access-form">
         <h2 id="signup-form-header"> Signup </h2>
-        <form id="signup-form" action="{% url 'access:signup' %}" method="post">
+        <form id="signup-form" action="{% url 'access:signup_post' %}" method="post">
             {% csrf_token %}
             <label for="username-input"></label>
-            <input type="text" minlength="1" id="username-input" name="username"
-                      placeholder="Add a comment" required/>
+            <input type="text" minlength="5" id="username-input" name="username"
+                      placeholder="username" required/>
             <br/>
             <label for="email-input"></label>
             <input type="email" id="email-input" name="email"
-                      placeholder="Add a comment" required/>
+                      placeholder="abc@def.ghi" required/>
             <br/>
             <label for="password-input"></label>
-            <input type="password" minlength="8" id="email-input" name="email"
-                      placeholder="Add a comment" required/>
+            <input type="password" minlength="8" id="password-input" name="password"
+                      placeholder="password" required/>
             <button type="submit"> Sign Up </button>
         </form>
     </main>
+    <br/>
 </body>
 </html>
