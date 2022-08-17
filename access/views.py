@@ -1,8 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.hashers import check_password, make_password
-
 
 min_uname_len = 5
 min_pass_len = 8
@@ -28,7 +28,13 @@ def signup_post(request):
     except KeyError:
         return HttpResponseRedirect(reverse('access:signup'))
 
-    return HttpResponse("You have signed up!")
+    user = User(
+        username=uname, email=email, password=make_password(password)
+    )
+    user.save()
+
+    # TODO: Need to provide session information in the future
+    return HttpResponseRedirect(reverse('logs:index'))
 
 
 def login_post(request):
