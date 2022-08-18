@@ -9,8 +9,6 @@ from .forms import SignupForm, LoginForm
 
 # Create your views here.
 def signup(request):
-    # TODO: Need some way to prevent going back to signup page
-    #  once logged in, or automatically redirect back to logs
     if request.method == 'POST':
         # Create form instance and populate it with data from request
         form = SignupForm(request.POST)
@@ -20,13 +18,17 @@ def signup(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
 
+            # Create User model instance and store it in db
             User.objects.create_user(
                 username=uname, email=email, password=password
             )
+            # Use redirect to prevent form resubmission
             return HttpResponseRedirect(reverse('logs:index'))
-    else:
-        form = SignupForm()
 
+        # Redirect to same page and prevent form resubmission
+        return HttpResponseRedirect(reverse('access:signup'))
+
+    form = SignupForm()
     return render(request, 'access/signup.html', {'form': form})
 
 
