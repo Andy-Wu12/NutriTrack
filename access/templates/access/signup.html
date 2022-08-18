@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Sign Up </title>
+
+    {% load static %}
+</head>
+<body>
+    <main class="access-form">
+        <h2 id="signup-form-header"> Signup </h2>
+        <form id="signup-form" action="{% url 'access:signup' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit"> Sign Up </button>
+        </form>
+    </main>
+</body>
+</html>
