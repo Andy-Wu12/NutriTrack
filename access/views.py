@@ -4,43 +4,31 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import reverse
 
-min_uname_len = 5
-min_pass_len = 8
+from .forms import SignupForm, LoginForm
+
 
 # Create your views here.
-def toSignup(request):
-    return HttpResponseRedirect(reverse('access:signup'))
-
-
 def signup(request):
-    return render(request, 'access/signup.html')
+    # TODO: Need some way to prevent going back to signup page
+    #  once logged in, or automatically redirect back to logs
+    if request.method == 'POST':
+        # Create form instance and populate it with data from request
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            # Process data in form.cleaned_data
+            uname = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            User.objects.create_user(
+                username=uname, email=email, password=password
+            )
+            return HttpResponseRedirect(reverse('logs:index'))
+    else:
+        form = SignupForm()
+
+    return render(request, 'access/signup.html', {'form': form})
 
 
 def login(request):
     return render(request, 'access/login.html')
-
-
-def signup_post(request):
-    try:
-        uname = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-    except KeyError:
-        return HttpResponseRedirect(reverse('access:signup'))
-
-    User.objects.create_user(
-        username=uname, email=email, password=password
-    )
-
-    # TODO: Need to provide session information in the future
-    return HttpResponseRedirect(reverse('logs:index'))
-
-
-def login_post(request):
-    try:
-        email = request.POST['email']
-        password = request.POST['password']
-    except KeyError:
-        return HttpResponseRedirect(reverse('access:login'))
-
-    return HttpResponse("You have logged in!")
