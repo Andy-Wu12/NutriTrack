@@ -2,11 +2,16 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+max_username_len = 75
+min_username_len = 5
+min_password_len = 8
 
 class SignupForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=75, min_length=5, required=True)
+    username = forms.CharField(label='Username', max_length=max_username_len,
+                               min_length=min_username_len, required=True)
     email = forms.EmailField(label='Email', required=True)
-    password = forms.CharField(min_length=8, widget=forms.PasswordInput(), required=True)
+    password = forms.CharField(min_length=min_password_len,
+                               widget=forms.PasswordInput(), required=True)
 
     def clean_username(self):
         uname = self.cleaned_data['username']
