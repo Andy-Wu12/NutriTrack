@@ -33,4 +33,21 @@ def signup(request):
 
 
 def login(request):
-    return render(request, 'access/login.html')
+    if request.method == 'POST':
+        # Create form instance and populate it with data from request
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # Process data in form.cleaned_data
+            email = form.cleaned_data.get('email')
+
+            # Find User instance if it exists and log in,
+            # else redirect to login form again
+            if User.objects.filter(email=email).exists():
+                return HttpResponseRedirect(reverse('logs:index'))
+
+        # Error case
+        # Redirect to same page and prevent form resubmission
+        return HttpResponseRedirect(reverse('access:login'))
+
+    form = LoginForm()
+    return render(request, 'access/login.html', {'form': form})

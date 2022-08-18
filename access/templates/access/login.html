@@ -11,13 +11,7 @@
         <h2 id="login-form-header"> Login </h2>
         <form id="login-form" action="{% url 'access:login' %}" method="post">
             {% csrf_token %}
-            <label for="email-input"></label>
-            <input type="email" id="email-input" name="email"
-                      placeholder="abc@def.com" required/>
-            <br/>
-            <label for="password-input"></label>
-            <input type="password" minlength="8" id="email-input" name="email"
-                      placeholder="Enter your password" required/>
+            {{ form }}
             <button type="submit"> Login </button>
         </form>
     </main>

@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 class SignupForm(forms.Form):
     username = forms.CharField(label='Username', max_length=75, min_length=5, required=True)
     email = forms.EmailField(label='Email', required=True)
-    password = forms.CharField(min_length=8, widget=forms.PasswordInput())
+    password = forms.CharField(min_length=8, widget=forms.PasswordInput(), required=True)
 
     def clean_username(self):
         uname = self.cleaned_data['username']
@@ -23,4 +23,4 @@ class SignupForm(forms.Form):
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label='Email', required=True)
-    password = forms.PasswordInput()
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
