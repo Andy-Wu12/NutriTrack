@@ -1,5 +1,3 @@
-import random
-
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -201,7 +199,7 @@ class UserCreationViewTests(TestCase):
         self.assertContains(response, text='Username already exists', status_code=400)
         self.assertContains(response, text='Email already exists', status_code=400)
 
-    def test_empty_input(self):
+    def test_empty_form_submission(self):
         form = create_signup_form()
         response = self.client.post(reverse('access:signup'), form.data)
 
