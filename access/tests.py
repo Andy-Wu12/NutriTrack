@@ -159,6 +159,7 @@ class UserCreationViewTests(TestCase):
     def test_username_already_exists(self):
         """
         If username already exists for any User, form invalid
+        and should render error message
         """
         form = create_signup_form(username=valid_uname,
                                   email=valid_email, password=valid_pass)
@@ -172,6 +173,7 @@ class UserCreationViewTests(TestCase):
     def test_email_already_exists(self):
         """
         If email already exists for any User, form invalid
+        and should render error message
         """
         form = create_signup_form(username=valid_uname,
                                   email=valid_email, password=valid_pass)
@@ -182,3 +184,26 @@ class UserCreationViewTests(TestCase):
 
         response = self.client.post(reverse('access:signup'), dupe_email_form.data)
         self.assertContains(response, text='Email already exists', status_code=400)
+
+    def test_email_and_user_name_already_exists(self):
+        """
+        If email and username already exists for any User, form invalid
+        and should render error message for BOTH
+        """
+        form = create_signup_form(username=valid_uname,
+                                  email=valid_email, password=valid_pass)
+        self.client.post(reverse('access:signup'), form.data)
+
+        dupe_form = create_signup_form(username=valid_uname,
+                                       email=valid_email, password='altPass123!')
+
+        response = self.client.post(reverse('access:signup'), dupe_form.data)
+        self.assertContains(response, text='Username already exists', status_code=400)
+        self.assertContains(response, text='Email already exists', status_code=400)
+
+    def test_empty_input(self):
+        form = create_signup_form()
+        response = self.client.post(reverse('access:signup'), form.data)
+
+        self.assertContains(response, text='This field is required',
+                            count=len(form.data), status_code=400)
