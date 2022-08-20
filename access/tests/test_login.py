@@ -60,6 +60,7 @@ class LoginFormTests(TestCase):
         View tests responsible for handling cases where email doesn't
         exist for any user and other errors
         """
+        create_default_valid_user()
         form = create_login_form(email=valid_email, password=valid_pass)
         self.assertTrue(form.is_valid())
 

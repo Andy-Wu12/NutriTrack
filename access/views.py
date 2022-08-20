@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -39,11 +40,15 @@ def login(request):
         if form.is_valid():
             # Process data in form.cleaned_data
             email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
 
-            # Find User instance if it exists and log in,
-            # else redirect to login form again
-            if User.objects.filter(email=email).exists():
-                return HttpResponseRedirect(reverse('logs:index'))
+            # Find User instance if it exists and verify password.
+            # If invalid, redirect to login form again
+            user_set = User.objects.filter(email=email)
+            if user_set.exists():
+                user = user_set.get(email=email)
+                if check_password(password, user.password):
+                    return HttpResponseRedirect(reverse('logs:index'))
 
         # Redirect to same page and render error message
         return render(request, 'access/login.html',
