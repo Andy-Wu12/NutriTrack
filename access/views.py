@@ -1,6 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.hashers import check_password, make_password
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -25,12 +25,34 @@ def signup(request):
             # Use redirect to prevent form resubmission
             return HttpResponseRedirect(reverse('logs:index'))
 
-        # Redirect to same page and prevent form resubmission
-        return HttpResponseRedirect(reverse('access:signup'))
+        # Redirect to same page and render error message
+        return render(request, 'access/signup.html',
+                      {'form': form, 'errors': form.errors}, status=400)
 
     form = SignupForm()
     return render(request, 'access/signup.html', {'form': form})
 
 
 def login(request):
-    return render(request, 'access/login.html')
+    if request.method == 'POST':
+        # Create form instance and populate it with data from request
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # Process data in form.cleaned_data
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # Find User instance if it exists and verify password.
+            # If invalid, redirect to login form again
+            user_set = User.objects.filter(email=email)
+            if user_set.exists():
+                user = user_set.get(email=email)
+                if check_password(password, user.password):
+                    return HttpResponseRedirect(reverse('logs:index'))
+
+        # Redirect to same page and render error message
+        return render(request, 'access/login.html',
+                      {'form': form, 'errors': form.errors}, status=400)
+
+    form = LoginForm()
+    return render(request, 'access/login.html', {'form': form})
