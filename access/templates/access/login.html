@@ -5,15 +5,30 @@
     <title> Login </title>
 
     {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'access/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'access/layout.css' %}">
 </head>
 <body>
     <main class="access-form">
-        <h2 id="login-form-header"> Login </h2>
+        <h1 id="login-form-header"> Food Log </h1>
         <form id="login-form" action="{% url 'access:login' %}" method="post">
             {% csrf_token %}
-            {{ form }}
-            <button type="submit"> Login </button>
+            <div class="form-content">
+                <h2> Login </h2>
+                {% for field in form %}
+                    <div class=input-field id="{{ field.name }}-input">
+                        <label for="{{ field.name }}">{{ field.name.capitalize }}</label>
+                        <br/>
+                        {{ field }}
+                    </div>
+                    <br/>
+                {% endfor %}
+                <button type="submit"> Login </button>
+            </div>
         </form>
     </main>
+    <footer>
+        <p> Need an account? <a href="{% url 'access:signup' %}">Sign up</a> instead</p>
+    </footer>
 </body>
 </html>

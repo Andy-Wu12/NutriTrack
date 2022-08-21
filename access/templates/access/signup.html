@@ -18,7 +18,7 @@
                 <h2> Sign Up </h2>
                 {% for field in form %}
                     <div class=input-field id="{{ field.name }}-input">
-                        <label for="{{ field.name }}">{{ field.name }}</label>
+                        <label for="{{ field.name }}">{{ field.name.capitalize }}</label>
                         <br/>
                         {{ field }}
                     </div>
