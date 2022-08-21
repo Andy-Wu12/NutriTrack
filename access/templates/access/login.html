@@ -15,6 +15,7 @@
             {% csrf_token %}
             <div class="form-content">
                 <h2> Login </h2>
+                {# Still renders even if fields not entered #}
                 {% if form.non_field_errors %}
                     <div class="error-message">
                         {{ form.non_field_errors }}
