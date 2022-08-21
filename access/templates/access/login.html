@@ -15,7 +15,16 @@
             {% csrf_token %}
             <div class="form-content">
                 <h2> Login </h2>
+                {# Still renders even if fields not entered #}
+                {% if form.non_field_errors %}
+                    <div class="error-message">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
                 {% for field in form %}
+                    {% if field.errors %}
+                        <div class="error-message"> {{ field.errors }} </div>
+                    {% endif %}
                     <div class=input-field id="{{ field.name }}-input">
                         <label for="{{ field.name }}">{{ field.name.capitalize }}</label>
                         <br/>

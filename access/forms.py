@@ -32,12 +32,19 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
     def clean(self):
-        bad_credential_mess = "Incorrect email/password combination"
         email = self.data['email']
-        if not User.objects.filter(email=email).exists():
-            raise ValidationError(bad_credential_mess)
-
-        stored_user = User.objects.get(email=email)
         password = self.data['password']
-        if not check_password(password, stored_user.password):
-            raise ValidationError(bad_credential_mess)
+
+        # Only validate if BOTH fields aren't empty
+        # This helps to prevent multiple error messages for same issue
+        # in login template, specifically the combination of
+        # bad_credential_mess and "Field is required" messages
+        if len(email) > 0 and len(password) > 0:
+            bad_credential_mess = "Incorrect email/password combination"
+            email = self.data['email']
+            if not User.objects.filter(email=email).exists():
+                raise ValidationError(bad_credential_mess)
+
+            stored_user = User.objects.get(email=email)
+            if not check_password(password, stored_user.password):
+                raise ValidationError(bad_credential_mess)

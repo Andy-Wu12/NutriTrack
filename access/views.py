@@ -27,7 +27,7 @@ def signup(request):
 
         # Redirect to same page and render error message
         return render(request, 'access/signup.html',
-                      {'form': form, 'errors': form.errors}, status=400)
+                      {'form': form}, status=400)
 
     form = SignupForm()
     return render(request, 'access/signup.html', {'form': form})
@@ -52,7 +52,7 @@ def login(request):
 
         # Redirect to same page and render error message
         return render(request, 'access/login.html',
-                      {'form': form, 'errors': form.errors}, status=400)
+                      {'form': form}, status=400)
 
     form = LoginForm()
     return render(request, 'access/login.html', {'form': form})
