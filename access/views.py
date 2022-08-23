@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.contrib.auth import login as django_login
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render
@@ -19,9 +20,11 @@ def signup(request):
             password = form.cleaned_data.get('password')
 
             # Create User model instance and store it in db
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=uname, email=email, password=password
             )
+            # Set sessionid cookie to allow for identifying User in requests
+            django_login(request, user)
             # Use redirect to prevent form resubmission
             return HttpResponseRedirect(reverse('logs:index'))
 
@@ -51,6 +54,8 @@ def login(request):
             if user_set.exists():
                 user = user_set.get(email=email)
                 if check_password(password, user.password):
+                    # Set session cookie to identify User in requests
+                    django_login(request, user)
                     return HttpResponseRedirect(reverse('logs:index'))
 
         # Redirect to same page and render error message
