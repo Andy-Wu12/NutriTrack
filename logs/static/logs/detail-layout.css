@@ -44,3 +44,7 @@
     display: inline-flex;
     gap: 5px;
 }
+
+.authenticate-message {
+    text-align: center;
+}

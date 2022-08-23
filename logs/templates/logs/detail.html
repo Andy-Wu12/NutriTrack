@@ -38,14 +38,20 @@
 
     <section id="comments">
         <h2 id="comment-header"> {{ comment_list|length }} Comments </h2>
-        <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
-            {% csrf_token %}
-            <label for="comment-text"></label>
-            <textarea minlength="1" id="comment-text" name="comment-text"
-                      placeholder="Add a comment" required></textarea>
-            <br/>
-            <button type="submit"> Comment </button>
-        </form>
+        {% if user.is_authenticated %}
+            <form id="comment-form" action="{% url 'logs:add-comment' log.id %}" method="post">
+                {% csrf_token %}
+                <label for="comment-text"></label>
+                <textarea minlength="1" id="comment-text" name="comment-text"
+                          placeholder="Add a comment" required></textarea>
+                <br/>
+                <button type="submit"> Comment </button>
+            </form>
+        {% else %}
+            <p class="authenticate-message">
+                <a href="{% url 'access:signup' %}">Sign up</a> to leave a comment!
+            </p>
+        {% endif %}
         <br/>
         {% if comment_list %}
             <div id="comment-list-container">
