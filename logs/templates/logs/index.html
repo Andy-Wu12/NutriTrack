@@ -11,29 +11,31 @@
     <link rel="stylesheet" type="text/css" href="{% static 'logs/index-style.css' %}">
 </head>
 <body>
-    <h1> Food Logs </h1>
+    <h1>
+        {% if user.is_authenticated %}
+            Hi {{ user.username }}! Here are the most recent logs
+        {% else %}
+            Create your own food log by
+            <a href="{% url 'access:signup' %}">signing up</a>
+        {% endif %}
+    </h1>
     <main class="main-content">
         <section class="food-log-data">
             {% if latest_logs %}
-                <ul class="food-log-list">
-                    {% for log in latest_logs %}
-                        <li>
-                            <div class="post-container">
-                                <img class="profile-icon" alt='user-icon'
-                                     src="{% static 'logs/images/default-avatar.jpg' %}"/>
-                                <div class="log-body">
-                                    <p>
-                                        {{ log.creator.username }} uploaded
-                                        <a href="{% url 'logs:detail' log.id %}">
-                                            {{ log.food.name }}
-                                        </a>
-                                        log on {{ log.pub_date.date }}
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% for log in latest_logs %}
+                    <div class="post-container">
+                        <img class="profile-icon" alt='user-icon'
+                             src="{% static 'logs/images/default-avatar.jpg' %}"/>
+                        <div class="log-body">
+                            <p>
+                                {{ log.creator.username }} uploaded
+                                <a href="{% url 'logs:detail' log.id %}">
+                                    {{ log.food.name }}</a>
+                                log on {{ log.pub_date.date }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
             {% else %}
                 <p> No logs are available. </p>
             {% endif %}

@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.utils import timezone
 
 from .models import Log, Comment
@@ -33,13 +32,15 @@ def comment(request, log_id):
     try:
         comment_data = request.POST['comment-text']
     except (KeyError, Comment.DoesNotExist):
+        error_message = 'Error getting comment data. Please try again!'
         return render(request, 'logs/detail.html', {'log': log,
                                                     'comment_list': log.comment_set.all(),
-                                                    'error_message': 'Error getting comment data. Please try again!'})
+                                                    'error_message': error_message})
     # Get user currently signed in
-        # Placeholder for now is to use admin account
     if len(comment_data.strip()) > 0:
-        commenter = User.objects.get(pk=1)
+        # request.user exists due to session cookie
+        # created after login/signup
+        commenter = request.user
         log = Log.objects.get(pk=log_id)
 
         new_comment = Comment(creator=commenter, log=log, comment=comment_data,
