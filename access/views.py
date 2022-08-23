@@ -29,6 +29,9 @@ def signup(request):
         return render(request, 'access/signup.html',
                       {'form': form}, status=400)
 
+    elif request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('logs:index'))
+
     form = SignupForm()
     return render(request, 'access/signup.html', {'form': form})
 
@@ -53,6 +56,9 @@ def login(request):
         # Redirect to same page and render error message
         return render(request, 'access/login.html',
                       {'form': form}, status=400)
+
+    elif request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('logs:index'))
 
     form = LoginForm()
     return render(request, 'access/login.html', {'form': form})
