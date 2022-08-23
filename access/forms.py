@@ -7,6 +7,7 @@ max_username_len = 75
 min_username_len = 5
 min_password_len = 8
 
+
 class SignupForm(forms.Form):
     username = forms.CharField(label='Username', max_length=max_username_len,
                                min_length=min_username_len, required=True)

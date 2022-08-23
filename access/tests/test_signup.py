@@ -5,12 +5,6 @@ from django.contrib.auth.models import User
 import access.forms as access_form
 
 # Helper functions and vars
-def create_signup_form(email='', username='', password=''):
-    form_data = {'email': email, 'username': username, 'password': password}
-    form = access_form.SignupForm(data=form_data)
-    form.is_valid()
-    return form
-
 valid_uname = 'tester123'
 valid_email = 'tester@foodlog.com'
 valid_pass = 'secur3passWord!'
@@ -21,6 +15,13 @@ invalid_uname = 'a'
 invalid_email = 'av2@'
 # Not minimum length
 invalid_pass = '1234'
+
+
+def create_signup_form(email='', username='', password=''):
+    form_data = {'email': email, 'username': username, 'password': password}
+    form = access_form.SignupForm(data=form_data)
+    form.is_valid()
+    return form
 
 
 class UserCreationFormTests(TestCase):
@@ -96,16 +97,16 @@ class UserCreationViewTests(TestCase):
         self.assertFalse(User.objects.filter(username=valid_uname).exists())
 
     def test_form_missing_password(self):
-            """
-            If no password is provided on the signup form,
-            send user back to form page with error code 400
-            """
-            form = create_signup_form(email=valid_email, username=valid_uname)
-            response = self.client.post(reverse('access:signup'), form.data)
+        """
+        If no password is provided on the signup form,
+        send user back to form page with error code 400
+        """
+        form = create_signup_form(email=valid_email, username=valid_uname)
+        response = self.client.post(reverse('access:signup'), form.data)
 
-            self.assertEqual(response.status_code, 400)
-            self.assertTemplateUsed(response, template_name='access/signup.html')
-            self.assertFalse(User.objects.filter(email=valid_email).exists())
+        self.assertEqual(response.status_code, 400)
+        self.assertTemplateUsed(response, template_name='access/signup.html')
+        self.assertFalse(User.objects.filter(email=valid_email).exists())
 
     def test_not_minimum_password_length(self):
         """

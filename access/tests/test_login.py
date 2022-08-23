@@ -19,11 +19,13 @@ invalid_pass = '1234'
 field_required_mess = 'This field is required'
 invalid_cred_mess = 'Incorrect email/password combination'
 
+
 # Helper functions and vars
 def create_login_form(email='', password=''):
     form_data = {'email': email, 'password': password}
     form = access_form.LoginForm(data=form_data)
     return form
+
 
 def create_default_valid_user():
     username = valid_uname
