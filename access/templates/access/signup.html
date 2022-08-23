@@ -19,7 +19,7 @@
                 {% for field in form %}
                     <div class="error-message"> {{ field.errors }} </div>
                     <div class=input-field id="{{ field.name }}-input">
-                        <label for="{{ field.name }}">{{ field.name.capitalize }}</label>
+                        {{ field.label_tag }}
                         <br/>
                         {{ field }}
                     </div>
