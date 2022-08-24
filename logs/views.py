@@ -3,7 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Log, Comment
+from .models import Food, Log, Comment
+from .forms import FoodForm
 
 
 # Should list all logs globally like some sort of home page feed
@@ -26,7 +27,41 @@ def detail(request, log_id):
     return render(request, 'logs/detail.html', context)
 
 
+def create_log(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('access:signup'))
+
+    if request.method == 'POST':
+        # Create form instance and populate it with data from request
+        form = FoodForm(request.POST)
+        if form.is_valid():
+            # Process data in form.cleaned_data
+            food_name = form.cleaned_data['name']
+            desc = form.cleaned_data['desc']
+            ingreds = form.cleaned_data['ingredients']
+            calories = form.cleaned_data['calories']
+
+            food_obj = Food(name=food_name, desc=desc, ingredients=ingreds,
+                            calories=calories)
+            food_obj.save()
+
+            log = Log(creator=request.user, food=food_obj, pub_date=timezone.now())
+            log.save()
+            return HttpResponseRedirect(reverse('logs:index'))
+
+        # Redirect to same page and render error message
+        return render(request, 'logs/create-log.html',
+                      {'form': form}, status=400)
+
+    form = FoodForm()
+
+    return render(request, 'logs/create-log.html', {'form': form})
+
+
 def comment(request, log_id):
+    if not request.method == 'POST':
+        return HttpResponseRedirect(reverse('logs:detail', args=(log_id,)))
+
     log = get_object_or_404(Log, pk=log_id)
 
     try:

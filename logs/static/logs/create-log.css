@@ -1,0 +1,36 @@
+:root {
+    --link-color: #67b2e8;
+    --link-hover-color: #bfccff;
+}
+
+body {
+    color: #ffffff;
+    text-align: center;
+    background-color: #121212;
+}
+
+form {
+    background-color: #222222;
+    border: 1px solid #b3b3b3;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+#form-fields {
+    margin: 10px 0;
+}
+
+.input-field > input {
+    width: 40%;
+}

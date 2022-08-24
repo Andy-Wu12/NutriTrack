@@ -41,5 +41,12 @@
             {% endif %}
         </section>
     </main>
+    <br/>
+    <br/>
+    {% if user.is_authenticated %}
+        <a id="create-log-redirect" href="{% url 'logs:create-log' %}">
+            Create a log
+        </a>
+    {% endif %}
 </body>
 </html>
