@@ -27,10 +27,16 @@ def detail(request, log_id):
 
 
 def create_log(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('access:signup'))
+
     return render(request, 'logs/create-log.html', {})
 
 
 def comment(request, log_id):
+    if not request.method == 'POST':
+        return HttpResponseRedirect(reverse('logs:detail', args=(log_id,)))
+
     log = get_object_or_404(Log, pk=log_id)
 
     try:
