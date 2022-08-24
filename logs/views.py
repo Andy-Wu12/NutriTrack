@@ -26,6 +26,10 @@ def detail(request, log_id):
     return render(request, 'logs/detail.html', context)
 
 
+def create_log(request):
+    return render(request, 'logs/create-log.html', {})
+
+
 def comment(request, log_id):
     log = get_object_or_404(Log, pk=log_id)
 

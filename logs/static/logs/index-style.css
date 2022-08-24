@@ -3,19 +3,27 @@
     --link-hover-color: #48b4e0;
 }
 
-h1 {
+body {
     text-align: center;
 }
 
-.food-log-list {
-    list-style: none;
+.food-log-data {
+    text-align: center;
 }
 
-.food-log > a:hover {
+a:hover {
     color: var(--link-hover-color);
 }
 
-.food-log {
-    background-color: antiquewhite;
-    margin-bottom: 10px;
+#create-log-redirect {
+    text-decoration: none;
+    padding: 10px;
+    color: black;
+    background-color: chartreuse;
+    border: 5px solid green;
+    border-radius: 1%;
+}
+
+.log-container {
+    text-align: center;
 }
