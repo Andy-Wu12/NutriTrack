@@ -26,3 +26,11 @@ a:hover {
     color: var(--link-hover-color);
     text-decoration: underline;
 }
+
+#form-fields {
+    margin: 10px 0;
+}
+
+.input-field > input {
+    width: 40%;
+}

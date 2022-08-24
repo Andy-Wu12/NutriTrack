@@ -15,14 +15,23 @@
             {% if user.is_authenticated %}
                 <form id="log-form" action="{% url 'logs:create-log' %}" method="post">
                     {% csrf_token %}
-                    <label for="comment-text"></label>
-                    <textarea minlength="1" id="comment-text" name="comment-text"
-                              placeholder="Add a comment" required></textarea>
-                    <br/>
-                    <button type="submit"> Comment </button>
+                    <div id="form-fields">
+                        {% for field in form %}
+                            <div class="error-message"> {{ field.errors }} </div>
+                            <div class="input-field">
+                                {{ field.label_tag }}
+                                <br/>
+                                {{ field }}
+                            </div>
+                            <br/>
+                        {% endfor %}
+                        <button type="submit"> Comment </button>
+                    </div>
                 </form>
             {% else %}
-                <h2> You must be <a href="{% url 'access:signup' %}">logged in</a> to create a log! </h2>
+                <h2>
+                    You must be <a href="{% url 'access:signup' %}">logged in</a> to create a log!
+                </h2>
             {% endif %}
         </section>
     </main>

@@ -10,8 +10,8 @@ from django.utils import timezone
 class Food(models.Model):
     name = models.CharField(max_length=200)
     desc = models.CharField('description', max_length=1000)
-    ingredients = models.CharField(max_length=500, null=True)
-    calories = models.IntegerField(default=0, null=True)
+    ingredients = models.CharField(max_length=500)
+    calories = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.name} contributed {self.calories} calories."
