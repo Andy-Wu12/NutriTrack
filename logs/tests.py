@@ -229,3 +229,41 @@ class LogDetailViewTests(TestCase):
         self.assertNotContains(response, "Be the first to comment.")
         self.assertEqual(response.context['log'], log)
         self.assertQuerysetEqual(response.context['comment_list'], comments, ordered=False)
+
+
+class LogSessionTests(TestCase):
+    def setUp(self):
+        valid_uname = "appTester01"
+        valid_pass = "s3cureP@ssword054!"
+        valid_email = "apptester@foodlog.com"
+        user = create_user(username=valid_uname, password=valid_pass,
+                           email=valid_email)
+
+    def test_index_authenticated(self):
+        """
+        Authenticated user should get a personal 'welcome message'
+        in the heading and should be allowed to create logs
+        """
+        pass
+
+    def test_index_unauthenticated(self):
+        """
+        Unauthenticated user should be referred to the signup page
+        in the heading, but still allowed to view logs
+        """
+        pass
+
+    def test_comment_authenticated_message(self):
+        """
+        Authenticated user should be able to comment
+        along with seeing log details and other comments
+        """
+        pass
+
+    def test_comment_unauthenticated_message(self):
+        """
+        Unauthenticated user should be asked to signup
+        before commenting but still able to see
+        log details and other comments
+        """
+        pass
