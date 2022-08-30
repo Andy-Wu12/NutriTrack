@@ -206,3 +206,40 @@ class UserCreationViewTests(TestCase):
 
         self.assertContains(response, text='This field is required',
                             count=len(form.data), status_code=400)
+
+
+class UserCreationSessionTests(TestCase):
+    def test_not_signed_up(self):
+        """
+        If user not authenticated and goes to signup page,
+        no redirect / re-render should occur.
+        """
+        response = self.client.get(reverse('access:signup'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'access/signup.html')
+
+    def test_already_signed_up_redirect(self):
+        """
+        If user authenticated and goes back to signup page,
+        they should automatically be redirected to logs index.
+        """
+        form = create_signup_form(email=valid_email, username=valid_uname,
+                                  password=valid_pass)
+        self.client.post(reverse('access:signup'), form.data)
+
+        response = self.client.get(reverse('access:signup'))
+
+        self.assertRedirects(response, reverse('logs:index'))
+
+    def test_signup_then_login(self):
+        """
+        If user signs up and goes to login page,
+        they should automatically be redirected to logs index.
+        """
+        form = create_signup_form(email=valid_email, username=valid_uname,
+                                  password=valid_pass)
+        self.client.post(reverse('access:signup'), form.data)
+
+        response = self.client.get(reverse('access:login'))
+
+        self.assertRedirects(response, reverse('logs:index'))
