@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
 from .models import Food, Log, Comment
+from access.tests.test_login import create_login_form
 
 
 # Helper functions
@@ -16,6 +17,7 @@ def create_user(username: str, password: str = '', fname: str = '', lname: str =
     """
     Create a user with the given `username`, and optional `password`,
     first name `fname`, last name `lname`, and `email`.
+    These parameters are optional for testing purposes.
     """
     user = User(username=username, email=email, password=make_password(password),
                 first_name=fname, last_name=lname)
@@ -229,3 +231,71 @@ class LogDetailViewTests(TestCase):
         self.assertNotContains(response, "Be the first to comment.")
         self.assertEqual(response.context['log'], log)
         self.assertQuerysetEqual(response.context['comment_list'], comments, ordered=False)
+
+
+class LogSessionTests(TestCase):
+    # Valid user account fields
+    valid_uname = "appTester01"
+    valid_pass = "s3cureP@ssword054!"
+    valid_email = "apptester@foodlog.com"
+
+    # Authentication status messages
+    auth_index_mess = f'Hi {valid_uname}! Here are the most recent logs'
+    unauth_index_mess = 'Create your own food log'
+    unauth_comment_mess = 'to leave a comment'
+
+    def setUp(self):
+        create_user(username=self.valid_uname, password=self.valid_pass,
+                    email=self.valid_email, save=True)
+
+    def test_index_authenticated(self):
+        """
+        Authenticated user should get a personal 'welcome message'
+        in the heading and should be allowed to create logs
+        """
+        form = create_login_form(email=self.valid_email, password=self.valid_pass)
+        self.client.post(reverse('access:login'), form.data)
+
+        response = self.client.get(reverse('logs:index'))
+        self.assertContains(response, self.auth_index_mess)
+
+    def test_index_unauthenticated(self):
+        """
+        Unauthenticated user should be referred to the signup page
+        in the heading, but still allowed to view logs
+        """
+        response = self.client.get(reverse('logs:index'))
+        self.assertContains(response, self.unauth_index_mess)
+
+        redirect_path = reverse('access:signup')
+        signup_button_html = f'<a href=\"{redirect_path}\">Sign Up</a>'
+        self.assertContains(response, signup_button_html, html=True)
+
+    def test_comment_authenticated_message(self):
+        """
+        Authenticated user should be able to comment
+        along with seeing log details and other comments
+        """
+        log = create_default_log()
+        form = create_login_form(email=self.valid_email, password=self.valid_pass)
+        self.client.post(reverse('access:login'), form.data)
+
+        response = self.client.get(reverse('logs:detail', args=(log.id, )))
+        comment_post_path = reverse('logs:add-comment', args=(log.id, ))
+        self.assertContains(response,
+                            f'<form id="comment-form" action="{comment_post_path}" method="post">'
+                            )
+
+    def test_comment_unauthenticated_message(self):
+        """
+        Unauthenticated user should be asked to signup
+        before commenting but still able to see
+        log details and other comments
+        """
+        log = create_default_log()
+        response = self.client.get(reverse('logs:detail', args=(log.id, )))
+        self.assertContains(response, self.unauth_comment_mess)
+
+        redirect_path = reverse('access:signup')
+        signup_button_html = f'<a href=\"{redirect_path}\">Sign up</a>'
+        self.assertContains(response, signup_button_html, html=True)

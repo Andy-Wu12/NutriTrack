@@ -148,3 +148,41 @@ class LoginFormViewsTests(TestCase):
         response = self.client.post(reverse('access:login'), form.data)
 
         self.assertRedirects(response, reverse('logs:index'))
+
+
+class LoginSessionTests(TestCase):
+    def setUp(self):
+        create_default_valid_user()
+
+    def test_not_logged_in(self):
+        """
+        If user is not authenticated and goes to login page,
+        no redirect / re-render should occur.
+        """
+        response = self.client.get(reverse('access:login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'access/login.html')
+
+    def test_already_logged_in_redirect(self):
+        """
+        If user is authenticated and goes back to login page,
+        they should automatically be redirected to logs index.
+        """
+        form = create_login_form(email=valid_email, password=valid_pass)
+        self.client.post(reverse('access:login'), form.data)
+
+        response = self.client.get(reverse('access:login'))
+
+        self.assertRedirects(response, reverse('logs:index'))
+
+    def test_login_then_signup(self):
+        """
+        If logs in then goes to signup page,
+        they should automatically be redirected to logs index.
+        """
+        form = create_login_form(email=valid_email, password=valid_pass)
+        self.client.post(reverse('access:login'), form.data)
+
+        response = self.client.get(reverse('access:signup'))
+
+        self.assertRedirects(response, reverse('logs:index'))
