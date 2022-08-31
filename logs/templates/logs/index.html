@@ -15,8 +15,8 @@
         {% if user.is_authenticated %}
             Hi {{ user.username }}! Here are the most recent logs
         {% else %}
-            Create your own food log by
-            <a href="{% url 'access:signup' %}">signing up</a>
+            Create your own food log -
+            <a href="{% url 'access:signup' %}"> Sign Up </a>
         {% endif %}
     </h1>
     <main class="main-content">
