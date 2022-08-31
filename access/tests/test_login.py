@@ -149,6 +149,7 @@ class LoginFormViewsTests(TestCase):
 
         self.assertRedirects(response, reverse('logs:index'))
 
+
 class LoginSessionTests(TestCase):
     def setUp(self):
         create_default_valid_user()

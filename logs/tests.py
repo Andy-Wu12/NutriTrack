@@ -241,8 +241,8 @@ class LogSessionTests(TestCase):
 
     # Authentication status messages
     auth_index_mess = f'Hi {valid_uname}! Here are the most recent logs'
-    unauth_index_mess = f'Create your own food log'
-    unauth_comment_mess = f'to leave a comment'
+    unauth_index_mess = 'Create your own food log'
+    unauth_comment_mess = 'to leave a comment'
 
     def setUp(self):
         create_user(username=self.valid_uname, password=self.valid_pass,
