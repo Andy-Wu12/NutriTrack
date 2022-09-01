@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.contrib.auth import login as django_login
+from django.contrib.auth import login as django_login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import render
@@ -67,3 +67,10 @@ def login(request):
 
     form = LoginForm()
     return render(request, 'access/login.html', {'form': form})
+
+
+def logout(request):
+    if request.user.is_authenticated:
+        django_logout(request)
+
+    return HttpResponseRedirect(reverse('access:login'))
