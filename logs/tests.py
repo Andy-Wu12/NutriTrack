@@ -299,3 +299,44 @@ class LogSessionTests(TestCase):
         redirect_path = reverse('access:signup')
         signup_button_html = f'<a href=\"{redirect_path}\">Sign up</a>'
         self.assertContains(response, signup_button_html, html=True)
+
+
+class CreateLogTests(TestCase):
+    def test_log_has_creator(self):
+        """
+        Unauthenticated user should not be able to create logs,
+        so make sure every log has an associated user
+        """
+        pass
+
+    def test_log_has_correct_creator(self):
+        """
+        Ensure created log has the correct associated user
+        """
+        pass
+
+
+class CreateLogViewTests(TestCase):
+    def test_form_missing_name(self):
+        """
+        Name field should be required for log creation
+        """
+        pass
+
+    def test_form_missing_description(self):
+        """
+        Description should be required for log creation
+        """
+        pass
+
+    def test_form_missing_ingredients(self):
+        """
+        Ingredients required for log creation
+        """
+        pass
+
+    def test_form_missing_calories(self):
+        """
+        # Calories required for log creation
+        """
+        pass
