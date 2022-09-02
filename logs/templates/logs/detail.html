@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> {{ log.creator.username }}'s Food Log </title>
+{% extends "logs/logs_base.html" %}
 
+{% block links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-layout.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <main class="food-log-data">
         <div class="log-container">
             <h1> {{ log.food.name }} </h1>
@@ -76,7 +74,6 @@
         {% endif %}
     </section>
     {% if error_message %}
-        <p> {{ error_message }}</p>
+        <p> {{ error_message }} </p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

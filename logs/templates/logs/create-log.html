@@ -1,14 +1,11 @@
-<!DOCTYPE html>
+{% extends 'logs/logs_base.html' %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> New Food Log </title>
-
+{% block links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/create-log.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <h1> Create a Food Log </h1>
     <main class="main-content">
         <section class="food-log-form">
@@ -35,5 +32,4 @@
             {% endif %}
         </section>
     </main>
-</body>
-</html>
+{% endblock %}
