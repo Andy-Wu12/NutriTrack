@@ -1,16 +1,13 @@
-<!DOCTYPE html>
+{% extends 'logs/logs_base.html' %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Food Log List </title>
-
+{% block links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/index-style.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <h1>
         {% if user.is_authenticated %}
             Hi {{ user.username }}! Here are the most recent logs
@@ -48,5 +45,5 @@
             Create a log
         </a>
     {% endif %}
-</body>
-</html>
+    <br/><br/>
+{% endblock %}
