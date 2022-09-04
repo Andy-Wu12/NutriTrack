@@ -15,11 +15,11 @@ form > button {
 }
 
 form > button:hover {
-    border: 1px solid black;
+    border: 1px solid white;
 }
 
 form > button:active {
-    border: 3px solid black;
+    border: 3px solid white;
 }
 
 /* Comments */
