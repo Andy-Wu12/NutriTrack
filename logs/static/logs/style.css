@@ -2,7 +2,22 @@
     --icon-size: 50px;
 }
 
+body {
+    color: #ffffff;
+    background-color: #121212;
+}
+
 img.profile-icon {
     width: var(--icon-size);
     height: var(--icon-size);
+}
+
+.navbar a:hover {
+    background-color: skyblue;
+    color: black;
+}
+
+.navbar a#home {
+    background-color: green;
+    color: white;
 }
