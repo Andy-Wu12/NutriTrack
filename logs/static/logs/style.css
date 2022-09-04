@@ -12,6 +12,10 @@ img.profile-icon {
     height: var(--icon-size);
 }
 
+a:link, a:visited {
+    color: skyblue;
+}
+
 .navbar a:hover {
     background-color: skyblue;
     color: black;
