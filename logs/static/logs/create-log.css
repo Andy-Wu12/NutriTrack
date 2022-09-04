@@ -16,15 +16,6 @@ a {
     text-decoration: none;
 }
 
-a:link, a:visited {
-    color: var(--link-color);
-}
-
-a:hover {
-    color: var(--link-hover-color);
-    text-decoration: underline;
-}
-
 #form-fields {
     margin: 10px 0;
 }
