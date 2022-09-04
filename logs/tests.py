@@ -82,8 +82,13 @@ def create_comment(creator: User, assoc_log: Log, comment_text: str,
                                   comment=comment_text, pub_date=time)
 
 
-def create_default_log():
+def create_default_food():
     food = create_food('test food', 'test desc', save=True)
+    return food
+
+
+def create_default_log():
+    food = create_default_food()
     user = create_user('awu', save=True)
     log = create_log(user, food, timezone.now(), save=True)
     return log
@@ -317,8 +322,8 @@ class CreateLogTests(TestCase):
 
     def create_valid_default_log(self, logged_in=True):
         if logged_in:
-            form = create_login_form(email=valid_email, password=valid_pass)
-            self.client.post(reverse('access:login'), form.data)
+            login_form = create_login_form(email=valid_email, password=valid_pass)
+            self.client.post(reverse('access:login'), login_form.data)
 
         form_data = {'name': self.food_name, 'desc': self.desc,
                      'ingredients': self.ingredients, 'calories': self.calories}
@@ -359,33 +364,119 @@ class CreateLogTests(TestCase):
         log = Log.objects.get(pk=1)
         self.assertEqual(log.food.calories, self.calories)
 
+
 class CreateLogViewTests(TestCase):
+    food_name = 'test food'
+    desc = 'test desc'
+    ingredients = 'test ingredients'
+    calories = 100
+
+    def login_default_user(self):
+        login_form = create_login_form(email=valid_email, password=valid_pass)
+        self.client.post(reverse('access:login'), login_form.data)
+
+    def populate_log_create_form(self, name=True, desc=True, ingredients=True,
+                                 calories=True):
+        form_data = {}
+        if name:
+            form_data['name'] = self.food_name
+        if desc:
+            form_data['desc'] = self.desc
+        if ingredients:
+            form_data['ingredients'] = self.ingredients
+        if calories:
+            form_data['calories'] = self.calories
+        return form_data
+
+    def setUp(self):
+        create_default_valid_user()
+
     def test_form_missing_name(self):
         """
         Name field should be required for log creation
         """
-        pass
+        self.login_default_user()
+        form_data = self.populate_log_create_form(name=False)
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.assertEqual(response.status_code, 400)
 
     def test_form_missing_description(self):
         """
         Description should be required for log creation
         """
-        pass
+        self.login_default_user()
+        form_data = self.populate_log_create_form(desc=False)
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.assertEqual(response.status_code, 400)
 
     def test_form_missing_ingredients(self):
         """
         Ingredients required for log creation
         """
-        pass
+        self.login_default_user()
+        form_data = self.populate_log_create_form(ingredients=False)
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.assertEqual(response.status_code, 400)
 
     def test_form_missing_calories(self):
         """
         # Calories required for log creation
         """
-        pass
+        self.login_default_user()
+        form_data = self.populate_log_create_form(calories=False)
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.assertEqual(response.status_code, 400)
 
     def test_form_redirect_unauthenticated_user(self):
         """
         Page should automatically redirect unauthenticated user
         to signup page
         """
+        response = self.client.get(reverse('logs:create-log'))
+        self.assertRedirects(response, reverse('access:signup'))
+
+    def test_valid_log_creation_redirect(self):
+        """
+        Valid log creation should redirect user to logs index
+        """
+        self.login_default_user()
+        form_data = self.populate_log_create_form()
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.assertRedirects(response, reverse('logs:index'))
+
+    def test_valid_log_creation_exists_in_db(self):
+        """
+        Valid log creation should be correctly stored in db
+        """
+        self.login_default_user()
+        form_data = self.populate_log_create_form()
+
+        response = self.client.post(reverse('logs:create-log'), form_data)
+        log = Log.objects.get(pk=1)
+        user = User.objects.get(pk=1)
+        self.assertTrue(log)
+
+        self.assertEqual(log.creator, user)
+        self.assertEqual(log.food.name, self.food_name)
+        self.assertEqual(log.food.desc, self.desc)
+        self.assertEqual(log.food.ingredients, self.ingredients)
+        self.assertEqual(log.food.calories, self.calories)
+
+    def test_valid_log_creation_exists_in_view(self):
+        """
+        Valid log creation should show correct data in logs index
+        """
+        self.login_default_user()
+        form_data = self.populate_log_create_form()
+
+        self.client.post(reverse('logs:create-log'), form_data)
+        response = self.client.get(reverse('logs:index'))
+        user = User.objects.get(pk=1)
+
+        self.assertContains(response, f"{user.username} uploaded")
+        self.assertContains(response, f"{self.food_name}")
