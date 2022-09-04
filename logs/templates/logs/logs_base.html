@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title> {% block title %} {% endblock %} </title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/layout.css' %}">
     {% block links %} {% endblock %}
 </head>
 <body>
@@ -10,7 +14,12 @@
 </body>
 <footer>
     {% if user.is_authenticated %}
-        <a id='logout-button' href={% url 'access:logout' %}> Logout </a>
+        <nav class="navbar">
+            <a id="home" href={% url 'logs:index' %}> Home </a>
+            <a id="nav-profile" href=''> Profile </a>
+            <a id="nav-create-log" href={% url 'logs:create-log' %}> Create Log </a>
+            <a id="nav-logout" href={% url 'access:logout' %}> Logout </a>
+        </nav>
     {% endif %}
 </footer>
 </html>
