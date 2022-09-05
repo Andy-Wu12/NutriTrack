@@ -11,12 +11,13 @@
 </head>
 <body>
     {% block body %} {% endblock %}
+    <br/> <br/>
 </body>
 <footer>
     {% if user.is_authenticated %}
         <nav class="navbar">
             <a id="home" href={% url 'logs:index' %}> Home </a>
-            <a id="nav-profile" href=''> Profile </a>
+            <a id="nav-profile" href={% url 'profiles:user' user.id %}> Profile </a>
             <a id="nav-create-log" href={% url 'logs:create-log' %}> Create Log </a>
             <a id="nav-logout" href={% url 'access:logout' %}> Logout </a>
         </nav>
