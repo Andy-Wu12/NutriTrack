@@ -14,4 +14,6 @@ def index(request):
 
 
 def user(request, user_id):
-    return HttpResponse("specific user profile here")
+    user_obj = User.objects.get(pk=user_id)
+
+    return render(request, 'profiles/user.html', {'user': user_obj})
