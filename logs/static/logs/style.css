@@ -15,13 +15,3 @@ img.profile-icon {
 a:link, a:visited {
     color: skyblue;
 }
-
-.navbar a:hover {
-    background-color: skyblue;
-    color: black;
-}
-
-.navbar a#home {
-    background-color: green;
-    color: white;
-}

@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title> {% block title %} {% endblock %} </title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'nav-layout.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'nav-style.css' %}">
     {% block links %} {% endblock %}
 </head>
 <body>
