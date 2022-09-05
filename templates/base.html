@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> {% block title %} {% endblock %} </title>
+    {% block links %} {% endblock %}
+</head>
+<body>
+    {% block body %} {% endblock %}
+</body>
+<footer>
+    {% if user.is_authenticated %}
+        <nav class="navbar">
+            <a id="home" href={% url 'logs:index' %}> Home </a>
+            <a id="nav-profile" href=''> Profile </a>
+            <a id="nav-create-log" href={% url 'logs:create-log' %}> Create Log </a>
+            <a id="nav-logout" href={% url 'access:logout' %}> Logout </a>
+        </nav>
+    {% endif %}
+</footer>
+</html>

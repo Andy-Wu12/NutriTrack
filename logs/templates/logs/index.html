@@ -1,11 +1,15 @@
 {% extends 'logs/logs_base.html' %}
 
-{% block links %}
+{% block page_title %}
+    Logs Index
+{% endblock %}
+
+{% block page_links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/index-style.css' %}">
 {% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>
         {% if user.is_authenticated %}
             Hi {{ user.username }}! Here are the most recent logs

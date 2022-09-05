@@ -1,12 +1,16 @@
 {% extends "logs/logs_base.html" %}
 
-{% block links %}
+{% block page_title %}
+    {{ log.creator.username }}'s Log
+{% endblock %}
+
+{% block page_links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-layout.css' %}">
 {% endblock %}
 
-{% block body %}
+{% block content %}
     <main class="food-log-data">
         <div class="log-container">
             <h1> {{ log.food.name }} </h1>
