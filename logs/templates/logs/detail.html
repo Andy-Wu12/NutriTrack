@@ -27,7 +27,9 @@
             <!-- Can potentially add image(s) here -->
             <div class="log-footer">
                 <p>
-                    {{ log.creator.username }}
+                    <a href="{% url 'profiles:user' log.creator.id %}">
+                        {{ log.creator.username }}
+                    </a>
                     <br>
                     {{ log.pub_date }}
                 </p>
@@ -63,7 +65,11 @@
                         </div>
                         <div class="post-body">
                             <div class="post-body-data">
-                                <div class="username-text"> {{ comment.creator.username }} </div>
+                                <div class="username-text">
+                                    <a href="{% url 'profiles:user' comment.creator.id %}">
+                                        {{ comment.creator.username }}
+                                    </a>
+                                </div>
                                 <div class="comment-date"> {{ comment.pub_date.date }} </div>
                             </div>
                             <p class="comment-body"> {{ comment.comment }} </p>
