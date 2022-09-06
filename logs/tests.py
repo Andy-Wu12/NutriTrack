@@ -478,5 +478,6 @@ class CreateLogViewTests(TestCase):
         response = self.client.get(reverse('logs:index'))
         user = User.objects.get(pk=1)
 
-        self.assertContains(response, f"{user.username} uploaded")
-        self.assertContains(response, f"{self.food_name}")
+        self.assertContains(response, f'{user.username}')
+        self.assertContains(response, 'uploaded')
+        self.assertContains(response, f'{self.food_name}')

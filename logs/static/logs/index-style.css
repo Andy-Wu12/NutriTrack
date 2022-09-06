@@ -1,18 +1,9 @@
-:root {
-    --link-default-color: #7bd3f7;
-    --link-hover-color: #48b4e0;
-}
-
 body {
     text-align: center;
 }
 
 .food-log-data {
     text-align: center;
-}
-
-a:hover {
-    color: var(--link-hover-color);
 }
 
 #create-log-redirect {
