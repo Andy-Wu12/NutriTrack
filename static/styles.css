@@ -1,4 +1,17 @@
+:root {
+    --link-default-color: #7bd3f7;
+    --link-hover-color: #48b4e0;
+}
+
 body {
     background-color: #121212;
     color: #ffffff;
+}
+
+a:link, a:visited {
+    color: skyblue;
+}
+
+a:hover {
+    color: var(--link-hover-color);
 }

@@ -10,6 +10,7 @@
 
 {% block body %}
     {% for user in users %}
-        <p> {{ user.username }} </p>
+        <a href="{% url 'profiles:user' user.id %}"> {{ user.username }} </a>
+        <br/>
     {% endfor %}
 {% endblock %}
