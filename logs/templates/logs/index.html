@@ -27,9 +27,13 @@
                              src="{% static 'images/default-avatar.jpg' %}"/>
                         <div class="log-body">
                             <p>
-                                {{ log.creator.username }} uploaded
+                                <a href="{% url 'profiles:user' log.creator.id %}">
+                                    {{ log.creator.username }}
+                                </a>
+                                uploaded
                                 <a href="{% url 'logs:detail' log.id %}">
-                                    {{ log.food.name }}</a>
+                                    {{ log.food.name }}
+                                </a>
                                 log on {{ log.pub_date.date }}
                             </p>
                         </div>
