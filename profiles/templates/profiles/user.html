@@ -5,9 +5,21 @@
 {% endblock %}
 
 {% block links %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'profiles/styles.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'profiles/layout.css' %}>
 
 {% endblock %}
 
 {% block body %}
-    <h1> {{ user.username }} </h1>
+    <div class="profile-container">
+        <h1> {{ user.username }} </h1>
+        {# User profile picture should go here when implemented #}
+        <img class='profile-picture' src='{% static 'images/default-avatar.jpg' %}'
+             alt="profile-avatar">
+        <br/><br/>
+        <div class="user-logs">
+            User logs will go here
+        </div>
+    </div>
 {% endblock %}
