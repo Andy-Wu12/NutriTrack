@@ -40,13 +40,13 @@ def create_user(username: str, password: str = '', fname: str = '', lname: str =
     return user
 
 
-def create_food(name: str, desc: str, ingredients: str = None, calories: int = None, save=False):
+def create_food(name: str, desc: str, ingredients: str = '', calories: int = 0, save=False):
     """
     Create a food with the given `name` and `desc`, along with
     optional `ingredients`, and number of calories.
     """
     food = Food(name=name, desc=desc, ingredients=ingredients,
-                calories=calories)
+                calories=calories, image=None)
 
     if save:
         food.save()
