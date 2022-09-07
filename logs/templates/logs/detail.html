@@ -25,7 +25,9 @@
                 </div>
             </div>
             <br/>
-            <img class="log-image" src='{{ log.food.image.url }}' alt='log-image' />
+            {% if log.food.image %}
+                <img class="log-image" src='{{ log.food.image.url }}' alt='log-image' />
+            {% endif %}
             <br/>
             <div class="log-footer">
                 <p>
