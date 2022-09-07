@@ -1,7 +1,10 @@
+import os
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.conf import settings
 
 from .models import Food, Log, Comment
 from .forms import FoodForm
@@ -41,7 +44,7 @@ def create_log(request):
             ingreds = form.cleaned_data['ingredients']
             calories = form.cleaned_data['calories']
             img = form.cleaned_data.get('image')
-            
+
             food_obj = Food(name=food_name, desc=desc, ingredients=ingreds,
                             calories=calories, image=img)
             food_obj.save()
