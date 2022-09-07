@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Sign Up </title>
+{% extends 'base.html' %}
 
+{% block title %}
+    Sign Up
+{% endblock %}
+
+{% block links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'access/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'access/layout.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <main class="access-form">
         <h1 id="signup-form-header"> Food Log </h1>
         <form class='input-form' id="signup-form" action="{% url 'access:signup' %}"
@@ -29,13 +31,12 @@
             </div>
         </form>
     </main>
-    <footer>
+    <div>
         <p> Already signed up? <a href="{% url 'access:login' %}">Login</a> instead</p>
         <br/><br/>
         <p>
             On the fence about signing up? Check out some user logs
             <a href={% url 'logs:index' %}> here </a>
         </p>
-    </footer>
-</body>
-</html>
+    </div>
+{% endblock %}

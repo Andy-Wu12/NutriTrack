@@ -1,4 +1,8 @@
 
+body {
+    text-align: center;
+}
+
 form {
     display: inline-block;
     width: 75%;
