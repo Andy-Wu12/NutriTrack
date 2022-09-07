@@ -14,7 +14,8 @@
     <main class="main-content">
         <section class="food-log-form">
             {% if user.is_authenticated %}
-                <form id="log-form" action="{% url 'logs:create-log' %}" method="post">
+                <form id="log-form" action="{% url 'logs:create-log' %}" method="post"
+                enctype="multipart/form-data">
                     {% csrf_token %}
                     <div id="form-fields">
                         {% for field in form %}
@@ -26,7 +27,7 @@
                             </div>
                             <br/>
                         {% endfor %}
-                        <button type="submit"> Comment </button>
+                        <button type="submit"> Create Log </button>
                     </div>
                 </form>
             {% else %}
@@ -36,4 +37,5 @@
             {% endif %}
         </section>
     </main>
+    <br/><br/>
 {% endblock %}

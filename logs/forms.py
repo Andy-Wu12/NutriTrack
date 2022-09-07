@@ -7,10 +7,10 @@ from .models import Food
 class FoodForm(ModelForm):
     class Meta:
         model = Food
-        fields = ['name', 'desc', 'ingredients', 'calories']
+        fields = ['name', 'desc', 'ingredients', 'calories', 'image']
         widgets = {
             'desc': Textarea(),
-            'ingredients': Textarea
+            'ingredients': Textarea(),
         }
 
     def clean_calories(self):
