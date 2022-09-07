@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Login </title>
+{% extends 'base.html' %}
 
+{% block title %}
+    Login
+{% endblock %}
+
+{% block links %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'access/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'access/layout.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <main class="access-form">
         <h1 id="login-form-header"> Food Log </h1>
         <form id="login-form" action="{% url 'access:login' %}" method="post">
@@ -36,8 +38,7 @@
             </div>
         </form>
     </main>
-    <footer>
+    <div>
         <p> Need an account? <a href="{% url 'access:signup' %}">Sign up</a> instead</p>
-    </footer>
-</body>
-</html>
+    </div>
+{% endblock %}
