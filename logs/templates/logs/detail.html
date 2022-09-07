@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+    {% load static %}
     <main class="food-log-data">
         <div class="log-container">
             <h1> {{ log.food.name }} </h1>
@@ -24,7 +25,10 @@
                 </div>
             </div>
             <br/>
-            <!-- Can potentially add image(s) here -->
+            {% if log.food.image %}
+                <img class="log-image" src='{{ log.food.image.url }}' alt='log-image' />
+            {% endif %}
+            <br/>
             <div class="log-footer">
                 <p>
                     <a href="{% url 'profiles:user' log.creator.id %}">

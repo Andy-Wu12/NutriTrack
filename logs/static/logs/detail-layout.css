@@ -29,6 +29,10 @@
     font-size: calc(var(--body-font-size) - 5pt) ;
 }
 
+.log-image {
+    width: clamp(400px, 75%, 1000px);
+}
+
 /* Comment container and components */
 #comment-header, #comment-form {
     text-align: center;
