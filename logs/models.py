@@ -11,7 +11,7 @@ class Food(models.Model):
     desc = models.CharField('description', max_length=1000)
     ingredients = models.CharField(max_length=500)
     calories = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='', null=True, blank=True)
+    image = models.ImageField(upload_to='logs', null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} contributed {self.calories} calories."
