@@ -29,7 +29,8 @@ def user(request, user_id):
             user_obj.profile_picture = new_pic
             user_obj.save()
             if old_pic != default_avatar:
-                os.remove(old_pic.path)
+                if os.path.exists(old_pic.path):
+                    os.remove(old_pic.path)
 
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
