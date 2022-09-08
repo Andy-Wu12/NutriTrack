@@ -6,4 +6,7 @@ from access.models import CustomUser
 class ProfileForm(ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['image']
+        fields = ['profile_picture']
+        labels = {
+            'profile_picture': "Change your profile picture"
+        }

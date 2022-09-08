@@ -18,6 +18,10 @@
         <img class='profile-picture' src='{% static 'images/default-avatar.jpg' %}'
              alt="profile-avatar">
         <br/><br/>
+        {% if target.email == user.email %}
+            {{ form }}
+        {% endif %}
+        <br/><br/>
         <div class="user-logs">
             User logs will go here
         </div>
