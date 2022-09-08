@@ -3,7 +3,7 @@ import os
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 
-from access.models import CustomUser
+from access.models import CustomUser, default_avatar
 from .forms import ProfileForm
 
 # Create your views here.
@@ -18,6 +18,7 @@ def index(request):
 
 
 def user(request, user_id):
+
     user_obj = CustomUser.objects.get(pk=user_id)
 
     if request.method == 'POST':
@@ -27,7 +28,8 @@ def user(request, user_id):
             new_pic = form.cleaned_data['profile_picture']
             user_obj.profile_picture = new_pic
             user_obj.save()
-            os.remove(old_pic.path)
+            if old_pic != default_avatar:
+                os.remove(old_pic.path)
 
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 

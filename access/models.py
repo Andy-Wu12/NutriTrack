@@ -6,7 +6,7 @@ default_avatar = "/default/default-avatar.jpg"
 
 # Create your models here.
 class CustomUser(AbstractUser):
-    profile_picture = models.ImageField(default=default_avatar)
+    profile_picture = models.ImageField(upload_to='avatars', default=default_avatar)
     date_joined = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
