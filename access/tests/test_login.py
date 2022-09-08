@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
 
+from ..models import CustomUser
 import access.forms as access_form
 
 
@@ -31,7 +31,7 @@ def create_default_valid_user():
     username = valid_uname
     email = valid_email
     password = valid_pass
-    User.objects.create_user(username, email, password)
+    CustomUser.objects.create_user(username, email, password)
 
 
 class LoginFormTests(TestCase):

@@ -4,10 +4,10 @@ from datetime import timedelta, datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
 from .models import Food, Log, Comment
+from access.models import CustomUser
 from access.tests.test_login import create_login_form
 from .forms import FoodForm
 
@@ -22,7 +22,7 @@ def create_default_valid_user():
     username = valid_uname
     email = valid_email
     password = valid_pass
-    User.objects.create_user(username, email, password)
+    CustomUser.objects.create_user(username, email, password)
 
 
 def create_user(username: str, password: str = '', fname: str = '', lname: str = '',
@@ -32,8 +32,8 @@ def create_user(username: str, password: str = '', fname: str = '', lname: str =
     first name `fname`, last name `lname`, and `email`.
     These parameters are optional for testing purposes.
     """
-    user = User(username=username, email=email, password=make_password(password),
-                first_name=fname, last_name=lname)
+    user = CustomUser(username=username, email=email, password=make_password(password),
+                      first_name=fname, last_name=lname)
 
     if save:
         user.save()
@@ -53,7 +53,7 @@ def create_food(name: str, desc: str, ingredients: str = '', calories: int = 0, 
     return food
 
 
-def create_log(creator: User, food: Food, pub_date: datetime, save=False):
+def create_log(creator: CustomUser, food: Food, pub_date: datetime, save=False):
     """
     Create a food log on the given date,
     associated to `creator` and a `food`.
@@ -65,7 +65,7 @@ def create_log(creator: User, food: Food, pub_date: datetime, save=False):
     return log
 
 
-def create_comment(creator: User, assoc_log: Log, comment_text: str,
+def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
                    day_offset: int, past=True):
     """
     Create a comment with an optional associated user, associated log,
@@ -338,7 +338,7 @@ class CreateLogTests(TestCase):
         """
         self.create_valid_default_log(logged_in=True)
         log = Log.objects.get(pk=1)
-        self.assertEqual(str(log.creator), valid_uname)
+        self.assertEqual(str(log.creator.username), valid_uname)
 
     def test_log_has_correct_description(self):
         """
@@ -458,7 +458,7 @@ class CreateLogViewTests(TestCase):
 
         response = self.client.post(reverse('logs:create-log'), form_data)
         log = Log.objects.get(pk=1)
-        user = User.objects.get(pk=1)
+        user = CustomUser.objects.get(pk=1)
         self.assertTrue(log)
 
         self.assertEqual(log.creator, user)
@@ -476,7 +476,7 @@ class CreateLogViewTests(TestCase):
 
         self.client.post(reverse('logs:create-log'), form_data)
         response = self.client.get(reverse('logs:index'))
-        user = User.objects.get(pk=1)
+        user = CustomUser.objects.get(pk=1)
 
         self.assertContains(response, f'{user.username}')
         self.assertContains(response, 'uploaded')
