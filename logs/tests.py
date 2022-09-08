@@ -9,7 +9,6 @@ from django.contrib.auth.hashers import make_password
 from .models import Food, Log, Comment
 from access.models import CustomUser
 from access.tests.test_login import create_login_form
-from .forms import FoodForm
 
 # Valid user account fields
 valid_uname = "appTester01"
@@ -456,7 +455,7 @@ class CreateLogViewTests(TestCase):
         self.login_default_user()
         form_data = self.populate_log_create_form()
 
-        response = self.client.post(reverse('logs:create-log'), form_data)
+        self.client.post(reverse('logs:create-log'), form_data)
         log = Log.objects.get(pk=1)
         user = CustomUser.objects.get(pk=1)
         self.assertTrue(log)
