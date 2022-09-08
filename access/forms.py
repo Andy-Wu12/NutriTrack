@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ValidationError
+
+from .models import CustomUser
 
 max_username_len = 75
 min_username_len = 5
@@ -17,13 +18,13 @@ class SignupForm(forms.Form):
 
     def clean_username(self):
         uname = self.cleaned_data['username']
-        if User.objects.filter(username=uname).exists():
+        if CustomUser.objects.filter(username=uname).exists():
             raise ValidationError("Username already exists")
         return uname
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
+        if CustomUser.objects.filter(email=email).exists():
             raise ValidationError("Email already exists")
         return email
 
@@ -43,9 +44,9 @@ class LoginForm(forms.Form):
         if len(email) > 0 and len(password) > 0:
             bad_credential_mess = "Incorrect email/password combination"
             email = self.data['email']
-            if not User.objects.filter(email=email).exists():
+            if not CustomUser.objects.filter(email=email).exists():
                 raise ValidationError(bad_credential_mess)
 
-            stored_user = User.objects.get(email=email)
+            stored_user = CustomUser.objects.get(email=email)
             if not check_password(password, stored_user.password):
                 raise ValidationError(bad_credential_mess)

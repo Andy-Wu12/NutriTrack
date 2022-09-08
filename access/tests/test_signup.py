@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
 
+from ..models import CustomUser
 import access.forms as access_form
 
 # Helper functions and vars
@@ -82,7 +82,7 @@ class UserCreationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertTemplateUsed('access/signup.html')
-        self.assertFalse(User.objects.filter(email=valid_email).exists())
+        self.assertFalse(CustomUser.objects.filter(email=valid_email).exists())
 
     def test_form_missing_email(self):
         """
@@ -94,7 +94,7 @@ class UserCreationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertTemplateUsed(response, template_name='access/signup.html')
-        self.assertFalse(User.objects.filter(username=valid_uname).exists())
+        self.assertFalse(CustomUser.objects.filter(username=valid_uname).exists())
 
     def test_form_missing_password(self):
         """
@@ -106,7 +106,7 @@ class UserCreationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertTemplateUsed(response, template_name='access/signup.html')
-        self.assertFalse(User.objects.filter(email=valid_email).exists())
+        self.assertFalse(CustomUser.objects.filter(email=valid_email).exists())
 
     def test_not_minimum_password_length(self):
         """
@@ -118,7 +118,7 @@ class UserCreationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertTemplateUsed(response, template_name='access/signup.html')
-        self.assertFalse(User.objects.filter(email=valid_email).exists())
+        self.assertFalse(CustomUser.objects.filter(email=valid_email).exists())
 
     def test_not_minimum_username_length(self):
         """
@@ -130,7 +130,7 @@ class UserCreationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertTemplateUsed(response, template_name='access/signup.html')
-        self.assertFalse(User.objects.filter(email=valid_email).exists())
+        self.assertFalse(CustomUser.objects.filter(email=valid_email).exists())
 
     def test_valid_user_post_redirect_to_logs(self):
         """
@@ -153,11 +153,11 @@ class UserCreationViewTests(TestCase):
                                   email=valid_email, password=valid_pass)
         self.client.post(reverse('access:signup'), form.data)
 
-        self.assertTrue(User.objects.filter(email=valid_email).exists())
+        self.assertTrue(CustomUser.objects.filter(email=valid_email).exists())
 
     def test_username_already_exists(self):
         """
-        If username already exists for any User, form invalid
+        If username already exists for any CustomUser, form invalid
         and should render error message
         """
         form = create_signup_form(username=valid_uname,
@@ -171,7 +171,7 @@ class UserCreationViewTests(TestCase):
 
     def test_email_already_exists(self):
         """
-        If email already exists for any User, form invalid
+        If email already exists for any CustomUser, form invalid
         and should render error message
         """
         form = create_signup_form(username=valid_uname,
@@ -186,7 +186,7 @@ class UserCreationViewTests(TestCase):
 
     def test_email_and_user_name_already_exists(self):
         """
-        If email and username already exists for any User, form invalid
+        If email and username already exists for any CustomUser, form invalid
         and should render error message for BOTH
         """
         form = create_signup_form(username=valid_uname,
