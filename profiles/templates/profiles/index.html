@@ -11,8 +11,8 @@
 
 {% block body %}
     {% if users %}
-        {% for user in users %}
-            <a href="{% url 'profiles:user' user.id %}"> {{ user.username }} </a>
+        {% for target in users %}
+            <a href="{% url 'profiles:user' target.id %}"> {{ target.username }} </a>
             <br/>
         {% endfor %}
     {% else  %}

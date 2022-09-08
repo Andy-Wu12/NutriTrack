@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ user.username }}'s Profile
+    {{ target.username }}'s Profile
 {% endblock %}
 
 {% block links %}
@@ -13,7 +13,7 @@
 
 {% block body %}
     <div class="profile-container">
-        <h1> {{ user.username }} </h1>
+        <h1> {{ target.username }} </h1>
         {# User profile picture should go here when implemented #}
         <img class='profile-picture' src='{% static 'images/default-avatar.jpg' %}'
              alt="profile-avatar">

@@ -17,4 +17,4 @@ def index(request):
 def user(request, user_id):
     user_obj = CustomUser.objects.get(pk=user_id)
 
-    return render(request, 'profiles/user.html', {'user': user_obj})
+    return render(request, 'profiles/user.html', {'target': user_obj})
