@@ -14,10 +14,20 @@
 {% block body %}
     <div class="profile-container">
         <h1> {{ target.username }} </h1>
-        {# User profile picture should go here when implemented #}
-        <img class='profile-picture' src='{% static 'images/default-avatar.jpg' %}'
-             alt="profile-avatar">
+        <img class='profile-picture' src='{{ target.profile_picture.url }}'
+         alt="profile-avatar">
         <br/><br/>
+        {% if user.is_authenticated %}
+            <form enctype="multipart/form-data" action="{% url 'profiles:user' user.id %}"
+            method="POST">
+                {% csrf_token %}
+                {% if target.email == user.email %}
+                    {{ form }}
+                    <button type="submit"> Upload </button>
+                    <br/><br/>
+                {% endif %}
+            </form>
+        {% endif %}
         <div class="user-logs">
             User logs will go here
         </div>
