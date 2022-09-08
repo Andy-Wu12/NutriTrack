@@ -18,3 +18,8 @@ body {
 .log-container {
     text-align: center;
 }
+
+.food-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
