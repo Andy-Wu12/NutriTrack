@@ -1,9 +1,9 @@
 from datetime import timedelta
 
-from django.db import models
-from django.contrib.auth.models import User
-
 from django.utils import timezone
+from django.db import models
+
+from access.models import CustomUser
 
 
 class Food(models.Model):
@@ -19,7 +19,7 @@ class Food(models.Model):
 
 
 class Log(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     food = models.OneToOneField(Food, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('Date published')
 
@@ -28,7 +28,7 @@ class Log(models.Model):
 
 
 class Comment(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     log = models.ForeignKey(Log, on_delete=models.CASCADE)
     comment = models.CharField(max_length=1000)
     pub_date = models.DateTimeField('Date commented')
