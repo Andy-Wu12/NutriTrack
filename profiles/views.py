@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 
@@ -21,9 +23,11 @@ def user(request, user_id):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
         if form.is_valid():
-            profile_picture = form.cleaned_data['profile_picture']
-            user_obj.profile_picture = profile_picture
+            old_pic = user_obj.profile_picture
+            new_pic = form.cleaned_data['profile_picture']
+            user_obj.profile_picture = new_pic
             user_obj.save()
+            os.remove(old_pic.path)
 
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
