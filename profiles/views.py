@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import HttpResponseRedirect, render
+from django.urls import reverse
 
 from access.models import CustomUser
 from .forms import ProfileForm
@@ -16,6 +17,15 @@ def index(request):
 
 def user(request, user_id):
     user_obj = CustomUser.objects.get(pk=user_id)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile_picture = form.cleaned_data['profile_picture']
+            user_obj.profile_picture = profile_picture
+            user_obj.save()
+
+        return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
     return render(request, 'profiles/user.html',
                   {'target': user_obj, 'form': ProfileForm()})
