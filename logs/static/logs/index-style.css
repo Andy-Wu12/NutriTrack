@@ -2,10 +2,6 @@ body {
     text-align: center;
 }
 
-.food-log-data {
-    text-align: center;
-}
-
 #create-log-redirect {
     text-decoration: none;
     padding: 10px;
@@ -15,11 +11,28 @@ body {
     border-radius: 1%;
 }
 
-.log-container {
-    text-align: center;
-}
-
 .food-icon {
+    vertical-align: middle;
     width: var(--icon-size);
     height: var(--icon-size);
+}
+
+ul {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    justify-content: center;
+    grid-row-gap: 30px;
+}
+
+.log-entry-container {
+    width: 75vw;
+    text-align: left !important;
+    border: 5px solid white;
+}
+
+.log-entry-details {
+    display: inline;
+    padding-left: 20px;
 }

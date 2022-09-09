@@ -9,7 +9,7 @@
     /*background-color: antiquewhite;*/
     border: 1px solid white;
     border-radius: 5%;
-    margin: 0 10px;
+    margin: 0 10%;
 }
 
 .log-food-info {
@@ -30,7 +30,7 @@
 }
 
 .log-image {
-    width: clamp(400px, 75%, 1000px);
+    width: clamp(50%, 75%, 1000px);
 }
 
 /* Comment container and components */
