@@ -18,30 +18,31 @@
             <img class='profile-picture' src='{{ target.profile_picture.url }}'
              alt="profile-avatar">
             <br/><br/>
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and target.email == user.email %}
                 <form enctype="multipart/form-data" action="{% url 'profiles:user' user.id %}"
                 method="POST">
                     {% csrf_token %}
-                    {% if target.email == user.email %}
                         {{ form }}
                         <button type="submit"> Upload </button>
                         <br/><br/>
-                    {% endif %}
                 </form>
             {% endif %}
         </section>
         <hr/>
         <section class="user-logs">
             <h2> Food Logs </h2>
-            <div class="logs-container">
-                {% for log in logs %}
-                    <p>
-                        {{ target.username }} ate
-                        <a href="{% url 'logs:detail' log.id %}"> {{ log.food.name }} </a>
-                        on {{ log.pub_date.date }} ({{ log.pub_date.time }})
-                    </p>
-                {% endfor %}
-            </div>
+            {% if logs %}
+                <div class="logs-container">
+                    {% for log in logs %}
+                        <p>
+                            <a href="{% url 'logs:detail' log.id %}"> {{ log.food.name }} </a>
+                            on {{ log.pub_date.date }} ({{ log.pub_date.time }})
+                        </p>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p> {{ target.username }} has no logs to show </p>
+            {% endif %}
         </section>
     </main>
 
