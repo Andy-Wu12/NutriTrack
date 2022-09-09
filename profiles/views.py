@@ -4,6 +4,7 @@ from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse
 
 from access.models import CustomUser, default_avatar
+from logs.models import Log
 from .forms import ProfileForm
 
 # Create your views here.
@@ -20,6 +21,7 @@ def index(request):
 def user(request, user_id):
 
     user_obj = CustomUser.objects.get(pk=user_id)
+    user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
@@ -35,4 +37,4 @@ def user(request, user_id):
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
     return render(request, 'profiles/user.html',
-                  {'target': user_obj, 'form': ProfileForm()})
+                  {'target': user_obj, 'form': ProfileForm(), 'logs': user_logs})
