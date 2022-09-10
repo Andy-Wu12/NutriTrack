@@ -1,12 +1,5 @@
-from django.forms import ModelForm
-
-from access.models import CustomUser
+from django import forms
 
 
-class ProfileForm(ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ['profile_picture']
-        labels = {
-            'profile_picture': "Change your profile picture"
-        }
+class ProfileForm(forms.Form):
+    profile_picture = forms.ImageField(label='Change your profile picture', required=True)
