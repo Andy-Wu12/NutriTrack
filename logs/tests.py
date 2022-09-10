@@ -1,96 +1,18 @@
 import random
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
-from django.contrib.auth.hashers import make_password
 
-from .models import Food, Log, Comment
+from .models import Log, Comment
 from access.models import CustomUser
 from access.tests.test_login import create_login_form
+from test_log_util import log_util
 
-# Valid user account fields
-valid_uname = "appTester01"
-valid_pass = "s3cureP@ssword054!"
-valid_email = "apptester@foodlog.com"
-
-
-# Helper functions
-def create_default_valid_user():
-    username = valid_uname
-    email = valid_email
-    password = valid_pass
-    CustomUser.objects.create_user(username, email, password)
-
-
-def create_user(username: str, password: str = '', fname: str = '', lname: str = '',
-                email: str = '', save=False):
-    """
-    Create a user with the given `username`, and optional `password`,
-    first name `fname`, last name `lname`, and `email`.
-    These parameters are optional for testing purposes.
-    """
-    user = CustomUser(username=username, email=email, password=make_password(password),
-                      first_name=fname, last_name=lname)
-
-    if save:
-        user.save()
-    return user
-
-
-def create_food(name: str, desc: str, ingredients: str = '', calories: int = 0, save=False):
-    """
-    Create a food with the given `name` and `desc`, along with
-    optional `ingredients`, and number of calories.
-    """
-    food = Food(name=name, desc=desc, ingredients=ingredients,
-                calories=calories, image=None)
-
-    if save:
-        food.save()
-    return food
-
-
-def create_log(creator: CustomUser, food: Food, pub_date: datetime, save=False):
-    """
-    Create a food log on the given date,
-    associated to `creator` and a `food`.
-    """
-    log = Log(creator=creator, food=food, pub_date=pub_date)
-
-    if save:
-        log.save()
-    return log
-
-
-def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
-                   day_offset: int, past=True):
-    """
-    Create a comment with an optional associated user, associated log,
-    `comment_text` and published the given number of `date_offset` to now
-    (negative for comments published in the past,
-    positive for comments that have yet to be published).
-    """
-    time = timezone.now()
-    if past:
-        time = time - timedelta(days=day_offset)
-    else:
-        time = time + timedelta(days=day_offset)
-    return Comment.objects.create(creator=creator, log=assoc_log,
-                                  comment=comment_text, pub_date=time)
-
-
-def create_default_food():
-    food = create_food('test food', 'test desc', save=True)
-    return food
-
-
-def create_default_log():
-    food = create_default_food()
-    user = create_user('awu', save=True)
-    log = create_log(user, food, timezone.now(), save=True)
-    return log
+valid_uname = log_util.valid_uname
+valid_pass = log_util.valid_pass
+valid_email = log_util.valid_email
 
 
 # Create your tests here.
@@ -143,7 +65,7 @@ class LogIndexViewTests(TestCase):
         """
         Created log should exist in log index
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
 
         response = self.client.get(reverse('logs:index'))
         self.assertEqual(response.status_code, 200)
@@ -157,9 +79,9 @@ class LogIndexViewTests(TestCase):
         logs = []
         num_iterations = random.randint(2, 10)
         for i in range(num_iterations):
-            food = create_food(f'test food{i}', f'test desc{i}', save=True)
-            user = create_user(f'awu{i}', save=True)
-            log = create_log(user, food, timezone.now(), save=True)
+            food = log_util.create_food(f'test food{i}', f'test desc{i}', save=True)
+            user = log_util.create_user(f'awu{i}', save=True)
+            log = log_util.create_log(user, food, timezone.now(), save=True)
             logs.append(log)
 
         response = self.client.get(reverse('logs:index'))
@@ -175,7 +97,7 @@ class LogDetailViewTests(TestCase):
         If no comments exist for a specific (and existing) log,
         an appropriate message is displayed.
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
 
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertEqual(response.status_code, 200)
@@ -187,11 +109,11 @@ class LogDetailViewTests(TestCase):
         """
         Comments from the past SHOULD be rendered
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
         day_offset = random.randint(1, 365)
         # Comment creator can be anyone, set as log creator for test simplicity
-        comment = create_comment(log.creator, log, 'past comment',
-                                 day_offset, past=True)
+        comment = log_util.create_comment(log.creator, log, 'past comment',
+                                          day_offset, past=True)
 
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertEqual(response.status_code, 200)
@@ -203,10 +125,10 @@ class LogDetailViewTests(TestCase):
         """
         A comment from the future should not be rendered ... yet
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
         day_offset = random.randint(1, 365)
-        create_comment(log.creator, log, 'past comment',
-                       day_offset, past=False)
+        log_util.create_comment(log.creator, log, 'past comment',
+                                day_offset, past=False)
 
         response = self.client.get(reverse('logs:detail', args=(log.id,)))
         self.assertEqual(response.status_code, 200)
@@ -219,12 +141,12 @@ class LogDetailViewTests(TestCase):
         If database contains past/present AND future comments,
         it should only render those not from the future.
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
         day_offset = random.randint(1, 365)
-        past_comment = create_comment(log.creator, log, 'this is the past',
-                                      day_offset, past=True)
-        create_comment(log.creator, log, 'this is the future',
-                       day_offset, past=False)
+        past_comment = log_util.create_comment(log.creator, log, 'this is the past',
+                                               day_offset, past=True)
+        log_util.create_comment(log.creator, log, 'this is the future',
+                                day_offset, past=False)
 
         response = self.client.get(reverse('logs:detail', args=(log.id,)))
         self.assertEqual(response.status_code, 200)
@@ -238,10 +160,10 @@ class LogDetailViewTests(TestCase):
         """
         comments = []
         num_comments = 50
-        log = create_default_log()
+        log = log_util.create_default_log()
         day_offset = random.randint(1, 365)
         for i in range(num_comments):
-            comments.append(create_comment(log.creator, log, 'this is the past',
+            comments.append(log_util.create_comment(log.creator, log, 'this is the past',
                             day_offset, past=True))
 
         response = self.client.get(reverse('logs:detail', args=(log.id,)))
@@ -257,8 +179,8 @@ class LogSessionTests(TestCase):
     unauth_comment_mess = 'to leave a comment'
 
     def setUp(self):
-        create_user(username=valid_uname, password=valid_pass,
-                    email=valid_email, save=True)
+        log_util.create_user(username=valid_uname, password=valid_pass,
+                             email=valid_email, save=True)
 
     def test_index_authenticated(self):
         """
@@ -288,7 +210,7 @@ class LogSessionTests(TestCase):
         Authenticated user should be able to comment
         along with seeing log details and other comments
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
         form = create_login_form(email=valid_email, password=valid_pass)
         self.client.post(reverse('access:login'), form.data)
 
@@ -304,7 +226,7 @@ class LogSessionTests(TestCase):
         before commenting but still able to see
         log details and other comments
         """
-        log = create_default_log()
+        log = log_util.create_default_log()
         response = self.client.get(reverse('logs:detail', args=(log.id, )))
         self.assertContains(response, self.unauth_comment_mess)
 
@@ -329,7 +251,7 @@ class CreateLogTests(TestCase):
         self.client.post(reverse('logs:create-log'), form_data)
 
     def setUp(self):
-        create_default_valid_user()
+        log_util.create_default_valid_user()
 
     def test_log_has_correct_creator(self):
         """
@@ -388,7 +310,7 @@ class CreateLogViewTests(TestCase):
         return form_data
 
     def setUp(self):
-        create_default_valid_user()
+        log_util.create_default_valid_user()
 
     def test_form_missing_name(self):
         """
