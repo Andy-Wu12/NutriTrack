@@ -25,7 +25,7 @@ class ProfileViewTests(TestCase):
             invalid_id = random.randint(max_valid_id + 1, sys.maxsize)
             response = self.client.get(reverse('profiles:user', args=[invalid_id]))
 
-            self.assertContains(response, 'User does not exist', status_code=400)
+            self.assertContains(response, 'User does not exist', status_code=404)
 
     def test_valid_profile_ids(self):
         """
