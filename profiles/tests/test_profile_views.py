@@ -35,5 +35,4 @@ class ProfileViewTests(TestCase):
         for i in range(1, self.num_users + 1):
             user = CustomUser.objects.get(pk=i)
             response = self.client.get(reverse('profiles:user', args=[i]))
-            self.assertEqual(response.status_code, 200)
-            self.assertContains(response, f'{user.username}')
+            self.assertContains(response, f'{user.username}', status_code=200)

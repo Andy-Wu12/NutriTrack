@@ -25,7 +25,6 @@ class ProfileLogsTest(TestCase):
         log = log_util.create_log(creator=self.user, food=food,
                                   pub_date=timezone.now(), save=True)
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))
-        self.assertEqual(request.status_code, 200)
         self.assertContains(request, log.food.name)
 
     def test_log_count(self):
@@ -44,7 +43,6 @@ class ProfileLogsTest(TestCase):
             logs.append(log)
 
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))
-        self.assertEqual(request.status_code, 200)
         self.assertContains(request, food.name, count=food_count)
 
     def test_multiple_logs_render_correctly(self):
@@ -61,7 +59,6 @@ class ProfileLogsTest(TestCase):
             logs.append(log)
 
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))
-        self.assertEqual(request.status_code, 200)
 
         for log in logs:
             self.assertContains(request, log.food.name)
