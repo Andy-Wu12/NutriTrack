@@ -1,11 +1,12 @@
 import os
 
-from django.shortcuts import HttpResponseRedirect, render
+from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 
 from access.models import CustomUser, default_avatar
 from logs.models import Log
 from .forms import ProfileForm
+
 
 # Create your views here.
 def index(request):
@@ -19,9 +20,11 @@ def index(request):
 
 
 def user(request, user_id):
-
-    user_obj = CustomUser.objects.get(pk=user_id)
-    user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
+    try:
+        user_obj = CustomUser.objects.get(pk=user_id)
+        user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
+    except CustomUser.DoesNotExist:
+        return HttpResponse('User does not exist!', status=404)
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
