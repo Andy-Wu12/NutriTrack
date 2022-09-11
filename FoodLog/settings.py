@@ -73,6 +73,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'FoodLog.wsgi.application'
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
