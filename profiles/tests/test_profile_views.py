@@ -18,15 +18,14 @@ class ProfileViewTests(TestCase):
         """
         Invalid user id route should return a 404 response and an error message
         """
-        max_valid_id = len(self.users)
+        max_valid_id = self.num_users
         num_loops = 100
 
         for i in range(num_loops):
-            invalid_id = random.randint(max_valid_id, sys.maxsize)
+            invalid_id = random.randint(max_valid_id + 1, sys.maxsize)
             response = self.client.get(reverse('profiles:user', args=[invalid_id]))
 
-            self.assertEqual(response.status_code, 404)
-            self.assertContains(response, 'User does not exist')
+            self.assertContains(response, 'User does not exist', status_code=400)
 
     def test_valid_profile_ids(self):
         """
