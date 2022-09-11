@@ -21,7 +21,7 @@ class ProfileLogsTest(TestCase):
         """
         User profile should be able to render a single log
         """
-        food = log_util.create_default_food()
+        food = log_util.create_random_food()
         log = log_util.create_log(creator=self.user, food=food,
                                   pub_date=timezone.now(), save=True)
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))
@@ -33,7 +33,7 @@ class ProfileLogsTest(TestCase):
         Number of logs rendered should be equal to the number of logs a user has
         """
         food_count = 100
-        food = log_util.create_default_food()
+        food = log_util.create_random_food()
         foods = [log_util.create_food(name=food.name, desc=food.desc, save=True)
                  for _ in range(food_count)]
 
@@ -52,7 +52,7 @@ class ProfileLogsTest(TestCase):
         User profile should be able to render all logs
         """
         food_count = 100
-        foods = [log_util.create_default_food() for _ in range(food_count)]
+        foods = [log_util.create_random_food() for _ in range(food_count)]
 
         logs = []
         for food in foods:

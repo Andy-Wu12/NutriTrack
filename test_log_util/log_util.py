@@ -24,19 +24,25 @@ def create_default_valid_user():
     return CustomUser.objects.create_user(username, email, password)
 
 
-def create_default_food():
+def create_default_log():
+    food = create_random_food()
+    user = create_user('awu', save=True)
+    log = create_log(user, food, timezone.now(), save=True)
+    return log
+
+
+def create_random_food():
     name = generateRandStr(5)
     desc = generateRandStr(6)
     food = create_food(name, desc, save=True)
     return food
 
 
-def create_default_log():
-    food = create_default_food()
-    user = create_user('awu', save=True)
-    log = create_log(user, food, timezone.now(), save=True)
-    return log
-
+def create_random_valid_user():
+    username = generateRandStr(10)
+    email = f'{generateRandStr(5)}@abc.com'
+    password = generateRandStr(12)
+    return CustomUser.objects.create_user(username, email, password)
 
 def create_user(username: str, password: str = '', fname: str = '', lname: str = '',
                 email: str = '', save=False):
