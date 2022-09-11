@@ -1,3 +1,5 @@
+import random
+import string
 from datetime import datetime, timedelta
 
 from django.utils import timezone
@@ -14,11 +16,26 @@ valid_email = "apptester@foodlog.com"
 
 
 # Helper functions
+
 def create_default_valid_user():
     username = valid_uname
     email = valid_email
     password = valid_pass
-    CustomUser.objects.create_user(username, email, password)
+    return CustomUser.objects.create_user(username, email, password)
+
+
+def create_default_food():
+    name = generateRandStr(5)
+    desc = generateRandStr(6)
+    food = create_food(name, desc, save=True)
+    return food
+
+
+def create_default_log():
+    food = create_default_food()
+    user = create_user('awu', save=True)
+    log = create_log(user, food, timezone.now(), save=True)
+    return log
 
 
 def create_user(username: str, password: str = '', fname: str = '', lname: str = '',
@@ -78,13 +95,5 @@ def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
                                   comment=comment_text, pub_date=time)
 
 
-def create_default_food():
-    food = create_food('test food', 'test desc', save=True)
-    return food
-
-
-def create_default_log():
-    food = create_default_food()
-    user = create_user('awu', save=True)
-    log = create_log(user, food, timezone.now(), save=True)
-    return log
+def generateRandStr(num_letters: int):
+    return ''.join(random.choices(string.ascii_lowercase, k=num_letters))
