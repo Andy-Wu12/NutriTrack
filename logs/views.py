@@ -42,8 +42,8 @@ def create_log(request):
             calories = form.cleaned_data['calories']
             img = form.cleaned_data.get('image')
 
-            food_obj = Food(name=food_name, desc=desc, ingredients=ingreds,
-                            calories=calories, image=img)
+            food_obj = Food(creator=request.user, name=food_name, desc=desc,
+                            ingredients=ingreds, calories=calories, image=img)
             food_obj.save()
 
             log = Log(creator=request.user, food=food_obj, pub_date=timezone.now())

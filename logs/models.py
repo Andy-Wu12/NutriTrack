@@ -7,6 +7,7 @@ from access.models import CustomUser
 
 
 class Food(models.Model):
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     desc = models.CharField('description', max_length=1000)
     ingredients = models.CharField(max_length=500)
@@ -34,7 +35,7 @@ class Comment(models.Model):
     pub_date = models.DateTimeField('Date commented')
 
     def __str__(self):
-        return f"{self.creator} said {self.comment} on {self.pub_date.date()} "
+        return f"{self.creator.username} said {self.comment} on {self.pub_date.date()} "
 
     def is_recent(self):
         now = timezone.now()
