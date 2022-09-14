@@ -24,6 +24,12 @@ def detail(request, log_id):
         'comment_list': comments
     }
 
+    if request.method == 'POST':
+        # One to one in log means log depends on food.
+        # Deleting food will cascade log, but not vice versa
+        log.food.delete()
+        return HttpResponseRedirect(reverse('logs:index'))
+
     return render(request, 'logs/detail.html', context)
 
 
