@@ -2,6 +2,7 @@ import os
 
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
+from django.utils import timezone
 
 from access.models import CustomUser, default_avatar
 from logs.models import Log
@@ -20,9 +21,18 @@ def index(request):
 
 
 def user(request, user_id):
+    context = {}
+
     try:
         user_obj = CustomUser.objects.get(pk=user_id)
         user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
+        context['target'] = user_obj
+        context['logs'] = user_logs
+
+        # Calculate statistics
+        context['day_age'] = (timezone.now() - user_obj.date_joined).days
+        context['calories_count'] = sum(log.food.calories for log in user_logs)
+
     except CustomUser.DoesNotExist:
         return HttpResponse('User does not exist!', status=404)
 
@@ -39,5 +49,6 @@ def user(request, user_id):
 
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
-    return render(request, 'profiles/user.html',
-                  {'target': user_obj, 'form': ProfileForm(), 'logs': user_logs})
+    context['form'] = ProfileForm()
+
+    return render(request, 'profiles/user.html', context)

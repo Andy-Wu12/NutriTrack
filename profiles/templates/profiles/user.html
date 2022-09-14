@@ -17,6 +17,10 @@
             <h1> {{ target.username }} </h1>
             <img class='profile-picture' src='{{ target.profile_picture.url }}'
              alt="profile-avatar">
+            <div id="stats-container">
+                <p> Account age: {{ day_age }} days </p>
+                <p> Total calories logged: {{ calories_count }} </p>
+            </div>
             <br/><br/>
             {% if user.is_authenticated and target.email == user.email %}
                 <form enctype="multipart/form-data" action="{% url 'profiles:user' user.id %}"
@@ -30,7 +34,7 @@
         </section>
         <hr/>
         <section class="user-logs">
-            <h2> Food Logs </h2>
+            <h2> Food Logs ({{ logs|length }}) </h2>
             {% if logs %}
                 <div class="logs-container">
                     {% for log in logs %}
