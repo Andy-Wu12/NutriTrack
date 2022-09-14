@@ -28,8 +28,10 @@ def user(request, user_id):
         user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
         context['target'] = user_obj
         context['logs'] = user_logs
-        context['age'] = (user_obj.date_joined - timezone.now()).days
+
         # Calculate statistics
+        context['day_age'] = (timezone.now() - user_obj.date_joined).days
+        context['calories_count'] = sum(log.food.calories for log in user_logs)
 
     except CustomUser.DoesNotExist:
         return HttpResponse('User does not exist!', status=404)
