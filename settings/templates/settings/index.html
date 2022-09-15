@@ -4,6 +4,14 @@
     Settings
 {% endblock %}
 
+{% block links %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'settings/layout.css' %}>
+{% endblock %}
+
 {% block body %}
-    User settings go here
+    <a href=""> Change Password </a> <br/>
+    <a href=""> Change Email </a> <br/>
+    <a href=""> Change Privacy Settings </a> <br/>
+    <a href=""> Delete Account </a> <br/>
 {% endblock %}
