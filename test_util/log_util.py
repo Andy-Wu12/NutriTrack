@@ -1,29 +1,14 @@
-import random
-import string
 from datetime import datetime, timedelta
 
 from django.utils import timezone
-from django.contrib.auth.hashers import make_password
 
 from access.models import CustomUser
 from logs.models import Food, Log, Comment
-
-
-# Valid user account fields
-valid_uname = "appTester01"
-valid_pass = "s3cureP@ssword054!"
-valid_email = "apptester@foodlog.com"
+from test_util.util import generateRandStr
+from test_util.account_util import create_random_valid_user, create_user
 
 
 # Helper functions
-
-def create_default_valid_user():
-    username = valid_uname
-    email = valid_email
-    password = valid_pass
-    return CustomUser.objects.create_user(username, email, password)
-
-
 def create_default_log():
     food = create_random_food()
     user = create_user('awu', save=True)
@@ -37,27 +22,6 @@ def create_random_food():
     desc = generateRandStr(6)
     food = create_food(user, name, desc, save=True)
     return food
-
-
-def create_random_valid_user():
-    username = generateRandStr(10)
-    email = f'{generateRandStr(5)}@abc.com'
-    password = generateRandStr(12)
-    return CustomUser.objects.create_user(username, email, password)
-
-def create_user(username: str, password: str = '', fname: str = '', lname: str = '',
-                email: str = '', save=False):
-    """
-    Create a user with the given `username`, and optional `password`,
-    first name `fname`, last name `lname`, and `email`.
-    These parameters are optional for testing purposes.
-    """
-    user = CustomUser(username=username, email=email, password=make_password(password),
-                      first_name=fname, last_name=lname)
-
-    if save:
-        user.save()
-    return user
 
 
 def create_food(creator: CustomUser, name: str, desc: str,
@@ -101,7 +65,3 @@ def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
         time = time + timedelta(days=day_offset)
     return Comment.objects.create(creator=creator, log=assoc_log,
                                   comment=comment_text, pub_date=time)
-
-
-def generateRandStr(num_letters: int):
-    return ''.join(random.choices(string.ascii_lowercase, k=num_letters))

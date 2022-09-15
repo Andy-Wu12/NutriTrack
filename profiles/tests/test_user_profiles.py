@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from access.models import CustomUser
-from test_log_util import log_util
+from test_util import log_util
 
 
 # Create your tests here.

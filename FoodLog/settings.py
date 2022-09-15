@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'access.apps.AccessConfig',
     'logs.apps.LogsConfig',
     'profiles.apps.ProfilesConfig',
+    'settings.apps.SettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
