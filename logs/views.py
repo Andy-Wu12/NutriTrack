@@ -24,6 +24,12 @@ def detail(request, log_id):
         'comment_list': comments
     }
 
+    if request.method == 'POST':
+        # One to one in log means log depends on food.
+        # Deleting food will cascade log, but not vice versa
+        log.food.delete()
+        return HttpResponseRedirect(reverse('logs:index'))
+
     return render(request, 'logs/detail.html', context)
 
 
@@ -42,8 +48,8 @@ def create_log(request):
             calories = form.cleaned_data['calories']
             img = form.cleaned_data.get('image')
 
-            food_obj = Food(name=food_name, desc=desc, ingredients=ingreds,
-                            calories=calories, image=img)
+            food_obj = Food(creator=request.user, name=food_name, desc=desc,
+                            ingredients=ingreds, calories=calories, image=img)
             food_obj.save()
 
             log = Log(creator=request.user, food=food_obj, pub_date=timezone.now())

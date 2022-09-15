@@ -79,8 +79,8 @@ class LogIndexViewTests(TestCase):
         logs = []
         num_iterations = random.randint(2, 10)
         for i in range(num_iterations):
-            food = log_util.create_food(f'test food{i}', f'test desc{i}', save=True)
             user = log_util.create_user(f'awu{i}', save=True)
+            food = log_util.create_food(user, f'test food{i}', f'test desc{i}', save=True)
             log = log_util.create_log(user, food, timezone.now(), save=True)
             logs.append(log)
 

@@ -38,6 +38,12 @@
                     {{ log.pub_date }}
                 </p>
             </div>
+            {% if user.email == log.creator.email %}
+                <form id="delete-form" action="{% url 'logs:detail' log.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit"> Delete log </button>
+                </form>
+            {% endif %}
             <br/>
         </div>
     </main>
