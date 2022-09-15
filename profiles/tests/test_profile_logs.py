@@ -8,7 +8,7 @@ from test_log_util import log_util
 # Create your tests here.
 class ProfileLogsTest(TestCase):
     def setUp(self):
-        self.user = log_util.create_default_valid_user()
+        self.user = log_util.create_random_valid_user()
 
     def test_no_logs_message(self):
         """
@@ -33,13 +33,14 @@ class ProfileLogsTest(TestCase):
         """
         food_count = 100
         food = log_util.create_random_food()
-        foods = [log_util.create_food(name=food.name, desc=food.desc, save=True)
+        foods = [log_util.create_food(food.creator, food.name,
+                                      food.desc, save=True)
                  for _ in range(food_count)]
 
         logs = []
         for food in foods:
-            log = log_util.create_log(creator=self.user, food=food,
-                                      pub_date=timezone.now(), save=True)
+            log = log_util.create_log(self.user, food,
+                                      timezone.now(), save=True)
             logs.append(log)
 
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))
@@ -54,8 +55,8 @@ class ProfileLogsTest(TestCase):
 
         logs = []
         for food in foods:
-            log = log_util.create_log(creator=self.user, food=food,
-                                      pub_date=timezone.now(), save=True)
+            log = log_util.create_log(self.user, food,
+                                      timezone.now(), save=True)
             logs.append(log)
 
         request = self.client.get(reverse('profiles:user', args=(self.user.id, )))

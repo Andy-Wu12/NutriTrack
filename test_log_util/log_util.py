@@ -32,9 +32,10 @@ def create_default_log():
 
 
 def create_random_food():
+    user = create_random_valid_user()
     name = generateRandStr(5)
     desc = generateRandStr(6)
-    food = create_food(name, desc, save=True)
+    food = create_food(user, name, desc, save=True)
     return food
 
 
@@ -59,12 +60,13 @@ def create_user(username: str, password: str = '', fname: str = '', lname: str =
     return user
 
 
-def create_food(name: str, desc: str, ingredients: str = '', calories: int = 0, save=False):
+def create_food(creator: CustomUser, name: str, desc: str,
+                ingredients: str = '', calories: int = 0, save=False):
     """
     Create a food with the given `name` and `desc`, along with
     optional `ingredients`, and number of calories.
     """
-    food = Food(name=name, desc=desc, ingredients=ingredients,
+    food = Food(creator=creator, name=name, desc=desc, ingredients=ingredients,
                 calories=calories, image=None)
 
     if save:
