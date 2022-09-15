@@ -8,11 +8,11 @@ from django.urls import reverse
 from .models import Log, Comment
 from access.models import CustomUser
 from access.tests.test_login import create_login_form
-from test_log_util import log_util
+from test_util import log_util, account_util
 
-valid_uname = log_util.valid_uname
-valid_pass = log_util.valid_pass
-valid_email = log_util.valid_email
+valid_uname = account_util.valid_uname
+valid_pass = account_util.valid_pass
+valid_email = account_util.valid_email
 
 
 # Create your tests here.
@@ -251,7 +251,7 @@ class CreateLogTests(TestCase):
         self.client.post(reverse('logs:create-log'), form_data)
 
     def setUp(self):
-        log_util.create_default_valid_user()
+        account_util.create_default_valid_user()
 
     def test_log_has_correct_creator(self):
         """
@@ -310,7 +310,7 @@ class CreateLogViewTests(TestCase):
         return form_data
 
     def setUp(self):
-        log_util.create_default_valid_user()
+        account_util.create_default_valid_user()
 
     def test_form_missing_name(self):
         """
