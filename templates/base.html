@@ -19,8 +19,9 @@
         <nav class="navbar">
             <a id="home" href={% url 'logs:index' %}> Home </a>
             <a id="nav-users" href={% url 'profiles:index' %}> Users </a>
-            <a id="nav-profile" href={% url 'profiles:user' user.id %}> Profile </a>
             <a id="nav-create-log" href={% url 'logs:create-log' %}> Create Log </a>
+            <a id="nav-profile" href={% url 'profiles:user' user.id %}> Profile </a>
+            <a id="nav-settings" href={% url 'settings:index' %}> Settings </a>
             <a id="nav-logout" href={% url 'access:logout' %}> Logout </a>
         </nav>
     {% endif %}
