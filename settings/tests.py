@@ -7,8 +7,9 @@ from test_util import account_util, util
 
 # Create your tests here.
 class SettingsFormTests(TestCase):
-    pass
-
+    def setUp(self):
+        self.user = account_util.create_random_valid_user()
 
 class SettingsViewTests(TestCase):
-    pass
+    def setUp(self):
+        self.user = account_util.create_random_valid_user()
