@@ -63,10 +63,21 @@ def delete(request):
 
     if request.method == 'POST':
         form = DeleteForm(request.POST)
-        return HttpResponseRedirect(reverse('access:signup'))
+        if form.is_valid():
+            # Still need to validate correct password
+            user = CustomUser.objects.get(pk=request.user.id)
+            if user.check_password(form.cleaned_data['password']):
+                user.delete()
+                return HttpResponseRedirect(reverse('access:signup'))
+
+            context['error'] = 'Incorrect password!'
+
+        context['form'] = DeleteForm()
+        return render(request, 'settings/delete.html', context)
 
     context['form'] = DeleteForm()
     return render(request, 'settings/delete.html', context)
+
 
 @login_required
 def privacy(request):
