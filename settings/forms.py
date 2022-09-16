@@ -31,6 +31,18 @@ class PasswordForm(forms.ModelForm):
 
 
 class EmailForm(forms.ModelForm):
+    email = forms.CharField()
+
     class Meta:
         model = CustomUser
         fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError("Email already exists!")
+
+        return email
