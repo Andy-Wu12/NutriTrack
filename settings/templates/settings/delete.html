@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Change Password
+    Delete Account
 {% endblock %}
 
 {% block links %}
@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block body %}
-    <h1> Change Your Password </h1>
-    <form id="password-form" action="{% url 'settings:password' %}" method="post">
+    <h1> Delete Your Account </h1>
+    <form id="email-form" action="{% url 'settings:delete-acc' %}" method="post">
         {% csrf_token %}
         <div id="form-fields">
             {# Only render general error message if no field-specific ones exist #}
@@ -33,7 +33,7 @@
                 </div>
                 <br/>
             {% endfor %}
-            <button type="submit"> Change Password </button>
+            <button type="submit"> Delete Your Account </button>
         </div>
     </form>
 {% endblock %}

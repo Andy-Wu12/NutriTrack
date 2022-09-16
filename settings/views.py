@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
-from .forms import PasswordForm, EmailForm
+from .forms import PasswordForm, EmailForm, DeleteForm
 from access.models import CustomUser
 
 
@@ -55,3 +55,19 @@ def email(request):
 
     context['form'] = EmailForm()
     return render(request, 'settings/email.html', context)
+
+
+@login_required
+def delete(request):
+    context = {}
+
+    if request.method == 'POST':
+        form = DeleteForm(request.POST)
+        return HttpResponseRedirect(reverse('access:signup'))
+
+    context['form'] = DeleteForm()
+    return render(request, 'settings/delete.html', context)
+
+@login_required
+def privacy(request):
+    pass

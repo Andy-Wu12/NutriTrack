@@ -4,6 +4,12 @@
     Change Email
 {% endblock %}
 
+{% block links %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'settings/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'settings/layout.css' %}">
+{% endblock %}
+
 {% block body %}
     <h1> Change Your Email </h1>
     <form id="email-form" action="{% url 'settings:email' %}" method="post">

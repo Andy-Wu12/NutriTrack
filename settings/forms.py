@@ -46,3 +46,14 @@ class EmailForm(forms.ModelForm):
             raise ValidationError("Email already exists!")
 
         return email
+
+
+class DeleteForm(forms.ModelForm):
+    password = forms.CharField(label='Confirm password to execute this action')
+
+    class Meta:
+        model = CustomUser
+        fields = ['password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }
