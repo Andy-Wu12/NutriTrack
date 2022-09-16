@@ -15,14 +15,8 @@
     <form id="email-form" action="{% url 'settings:delete-acc' %}" method="post">
         {% csrf_token %}
         <div id="form-fields">
-            {# Only render general error message if no field-specific ones exist #}
-            {% if form.errors|length == form.non_field_errors|length %}
-                {% for err in form.non_field_errors %}
-                    <div class="form-error-message">
-                        {{ err }}
-                    </div>
-                {% endfor %}
-                <br/>
+            {% if error %}
+                <p class="error-message"> {{ error }} </p>
             {% endif %}
             {% for field in form %}
                 <div class="error-message"> {{ field.errors }} </div>
