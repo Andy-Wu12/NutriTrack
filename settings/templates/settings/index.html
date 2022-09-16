@@ -13,5 +13,5 @@
     <a href="{% url 'settings:password' %}"> Change Password </a> <br/>
     <a href="{% url 'settings:email' %}"> Change Email </a> <br/>
     <a href=""> Change Privacy Settings </a> <br/>
-    <a href=""> Delete Account </a> <br/>
+    <a href="{% url 'settings:delete-acc' %}"> Delete Account </a> <br/>
 {% endblock %}
