@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from access.models import CustomUser
-from .forms import SettingsForm
+from .forms import PasswordForm, EmailForm
 from test_util import account_util, util
 
 
