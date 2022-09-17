@@ -26,7 +26,6 @@ def detail(request, log_id):
 
     if not log_privacy.show_logs and request.user.id != log.creator.id:
         context['privacyMessage'] = 'You do not have permisson to view this log!'
-
     else:
         context['log'] = log
         context['comment_list'] = comments
