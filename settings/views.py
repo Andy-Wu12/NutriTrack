@@ -9,9 +9,9 @@ from django.contrib.auth import logout
 from .forms import PasswordForm, EmailForm, DeleteForm, PrivacyForm
 from access.models import CustomUser
 from logs.models import Log
+from .models import Privacy
 
 
-# Create your views here.
 @login_required
 def index(request):
     return render(request, 'settings/index.html')
@@ -87,6 +87,9 @@ def privacy(request):
 
     if request.method == 'POST':
         form = PrivacyForm(request.POST)
+        if form.is_valid():
+            user_privacy_settings = Privacy.objects.get(user=request.user.id)
+            user_privacy_settings.show_logs = form.cleaned_data['show_logs']
         return HttpResponseRedirect(reverse('settings:index'))
 
     context['form'] = PrivacyForm()
