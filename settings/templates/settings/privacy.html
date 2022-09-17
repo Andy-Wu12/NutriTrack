@@ -17,7 +17,11 @@
         <label for="log-setting"> Logs Are Public </label>
         {# Provides false value if checkbox unchecked #}
         <input type="hidden" name="log-setting" value="False" />
-        <input type="checkbox" id='log-setting' value="true" name="log-setting"/>
+        {% if logValue == True %}
+            <input type="checkbox" id='log-setting' value="True" name="log-setting" checked/>
+        {% else %}
+            <input type="checkbox" id='log-setting' value="True" name="log-setting"/>
+        {% endif %}
         <button type="submit"> Save Changes </button>
     </form>
 {% endblock %}
