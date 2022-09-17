@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
-from .forms import PasswordForm, EmailForm, DeleteForm
+from .forms import PasswordForm, EmailForm, DeleteForm, PrivacyForm
 from access.models import CustomUser
 from logs.models import Log
+
 
 # Create your views here.
 @login_required
@@ -82,7 +83,14 @@ def delete(request):
 
 @login_required
 def privacy(request):
-    pass
+    context = {}
+
+    if request.method == 'POST':
+        form = PrivacyForm(request.POST)
+        return HttpResponseRedirect(reverse('settings:index'))
+
+    context['form'] = PrivacyForm()
+    return render(request, 'settings/privacy.html', context)
 
 
 def delete_account_data(user: CustomUser):

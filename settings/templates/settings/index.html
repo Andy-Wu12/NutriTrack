@@ -10,8 +10,9 @@
 {% endblock %}
 
 {% block body %}
-    <a href="{% url 'settings:password' %}"> Change Password </a> <br/>
-    <a href="{% url 'settings:email' %}"> Change Email </a> <br/>
-    <a href=""> Change Privacy Settings </a> <br/>
-    <a href="{% url 'settings:delete-acc' %}"> Delete Account </a> <br/>
+    <h1> Settings </h1>
+    <a href="{% url 'settings:password' %}"> Change Password </a> <br/><br/>
+    <a href="{% url 'settings:email' %}"> Change Email </a> <br/><br/>
+    <a href="{% url 'settings:privacy' %}"> Change Privacy Settings </a> <br/><br/>
+    <a href="{% url 'settings:delete-acc' %}"> Delete Account </a> <br/><br/>
 {% endblock %}
