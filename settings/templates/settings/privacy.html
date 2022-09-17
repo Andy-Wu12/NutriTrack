@@ -14,7 +14,10 @@
     <h1> Privacy Settings </h1>
     <form id="privacy-form" action="{% url 'settings:privacy' %}" method="post">
         {% csrf_token %}
-        {{ form }}
+        <label for="log-setting"> Logs Are Public </label>
+        {# Provides false value if checkbox unchecked #}
+        <input type="hidden" name="log-setting" value="False" />
+        <input type="checkbox" id='log-setting' value="true" name="log-setting"/>
         <button type="submit"> Save Changes </button>
     </form>
 {% endblock %}
