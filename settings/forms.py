@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 
 from access.models import CustomUser
 from access.forms import min_password_len
-from .models import Privacy
 
 
 class PasswordForm(forms.ModelForm):
@@ -59,14 +58,3 @@ class DeleteForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput()
         }
-
-
-class PrivacyForm(forms.ModelForm):
-
-    class Meta:
-        model = Privacy
-        fields = ['show_logs']
-        widgets = {
-            'show_logs': forms.CheckboxInput()
-        }
-

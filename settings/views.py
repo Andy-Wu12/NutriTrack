@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
-from .forms import PasswordForm, EmailForm, DeleteForm, PrivacyForm
+from .forms import PasswordForm, EmailForm, DeleteForm
 from access.models import CustomUser
 from logs.models import Log
 from .models import Privacy
@@ -85,14 +85,13 @@ def delete(request):
 def privacy(request):
     context = {}
 
-    if request.method == 'POST':
-        form = PrivacyForm(request.POST)
-        if form.is_valid():
-            user_privacy_settings = Privacy.objects.get(user=request.user.id)
-            user_privacy_settings.show_logs = form.cleaned_data['show_logs']
-        return HttpResponseRedirect(reverse('settings:index'))
+    user_privacy_settings = Privacy.objects.get(user=request.user.id)
 
-    context['form'] = PrivacyForm()
+    if request.method == 'POST':
+        log_setting_choice = request.POST['log-setting']
+        user_privacy_settings.show_logs = log_setting_choice
+        return HttpResponseRedirect(reverse('settings:privacy'))
+
     return render(request, 'settings/privacy.html', context)
 
 
