@@ -7,7 +7,7 @@ from django.utils import timezone
 from access.models import CustomUser, default_avatar
 from logs.models import Log
 from .forms import ProfileForm
-
+from settings.models import Privacy
 
 # Create your views here.
 def index(request):
@@ -25,9 +25,13 @@ def user(request, user_id):
 
     try:
         user_obj = CustomUser.objects.get(pk=user_id)
+        user_privacy = Privacy.objects.get(user=user_obj)
         user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
         context['target'] = user_obj
-        context['logs'] = user_logs
+        if user_privacy.show_logs:
+            context['logs'] = user_logs
+        else:
+            context['privacyMessage'] = 'This user has set their logs to private!'
 
         # Calculate statistics
         context['day_age'] = (timezone.now() - user_obj.date_joined).days
