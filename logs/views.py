@@ -5,12 +5,16 @@ from django.utils import timezone
 
 from .models import Food, Log, Comment
 from .forms import FoodForm
+from access.models import CustomUser
 from settings.models import Privacy
 
 
 # Should list all logs globally like some sort of home page feed
+# Taking into account user privacy settings
 def index(request):
-    latest_logs = Log.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+    public_log_filter = Privacy.objects.filter(show_logs=True).values_list('id')
+    latest_logs = Log.objects.filter(
+        pub_date__lte=timezone.now(), creator__in=public_log_filter).order_by('-pub_date')
     context = {
         'latest_logs': latest_logs
     }
