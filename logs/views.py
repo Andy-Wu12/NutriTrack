@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from .models import Food, Log, Comment
 from .forms import FoodForm
+from settings.models import Privacy
 
 
 # Should list all logs globally like some sort of home page feed
@@ -17,12 +18,18 @@ def index(request):
 
 
 def detail(request, log_id):
+    context = {}
+
     log = get_object_or_404(Log, pk=log_id)
+    log_privacy = Privacy.objects.get(user=log.creator.id)
     comments = log.comment_set.filter(pub_date__lte=timezone.now())
-    context = {
-        'log': log,
-        'comment_list': comments
-    }
+
+    if not log_privacy.show_logs and request.user.id != log.creator.id:
+        context['privacyMessage'] = 'You do not have permisson to view this log!'
+
+    else:
+        context['log'] = log
+        context['comment_list'] = comments
 
     if request.method == 'POST':
         # One to one in log means log depends on food.

@@ -28,7 +28,7 @@ def user(request, user_id):
         user_privacy = Privacy.objects.get(user=user_obj)
         user_logs = Log.objects.filter(creator=user_obj.id).order_by('-pub_date')
         context['target'] = user_obj
-        if user_privacy.show_logs:
+        if user_privacy.show_logs or request.user.id == user_id:
             context['logs'] = user_logs
         else:
             context['privacyMessage'] = 'This user has set their logs to private!'
