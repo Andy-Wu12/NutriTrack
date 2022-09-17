@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from .models import CustomUser
 from .forms import SignupForm, LoginForm
+from settings.models import Privacy
 
 
 # Create your views here.
@@ -23,6 +24,7 @@ def signup(request):
             user = CustomUser.objects.create_user(
                 username=uname, email=email, password=password
             )
+            Privacy.objects.create(user=user)
             # Set sessionid cookie to allow for identifying User in requests
             django_login(request, user)
             # Use redirect to prevent form resubmission
