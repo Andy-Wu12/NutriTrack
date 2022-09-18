@@ -5,7 +5,6 @@ from django.utils import timezone
 
 from .models import Food, Log, Comment
 from .forms import FoodForm
-from access.models import CustomUser
 from settings.models import Privacy
 
 
