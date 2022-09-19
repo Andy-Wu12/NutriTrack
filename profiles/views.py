@@ -31,7 +31,7 @@ def user(request, user_id):
         if user_privacy.show_logs or request.user.id == user_id:
             context['logs'] = user_logs
         else:
-            context['privacyMessage'] = 'This user has set their logs to private!'
+            context['privacyMessage'] = "This user's logs are private!"
 
         # Calculate statistics
         context['day_age'] = (timezone.now() - user_obj.date_joined).days

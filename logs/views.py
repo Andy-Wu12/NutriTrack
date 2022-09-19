@@ -28,7 +28,7 @@ def detail(request, log_id):
     comments = log.comment_set.filter(pub_date__lte=timezone.now())
 
     if not log_privacy.show_logs and request.user.id != log.creator.id:
-        context['privacyMessage'] = 'You do not have permisson to view this log!'
+        context['privacyMessage'] = 'You do not have permission to view this log!'
     else:
         context['log'] = log
         context['comment_list'] = comments
