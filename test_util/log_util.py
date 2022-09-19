@@ -15,6 +15,11 @@ def create_default_log():
     log = create_log(user, food, timezone.now(), save=True)
     return log
 
+def create_random_log(user: CustomUser):
+    food = create_random_food()
+    log = create_log(user, food, timezone.now(), save=True)
+
+    return log
 
 def create_random_food():
     user = create_random_valid_user()
