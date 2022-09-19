@@ -1,0 +1,24 @@
+name: Test Coverage CI
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches-ignore: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout action
+      uses: actions/checkout@v2
+    - name: Django Coverage action
+      uses: actions/python-django-coverage-gitHub-action@0.9
+      with:
+        django-app: 'food-log'
+        minimum-coverage: '90'
