@@ -89,7 +89,6 @@ def privacy(request):
 
     if request.method == 'POST':
         log_setting_choice = request.POST['log-setting']
-        print(log_setting_choice)
         user_privacy_settings.show_logs = log_setting_choice
         user_privacy_settings.save()
         return HttpResponseRedirect(reverse('settings:privacy'))

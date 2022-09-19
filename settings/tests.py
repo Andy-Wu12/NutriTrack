@@ -1,8 +1,14 @@
 from django.test import TestCase
+from django.urls import reverse
 
 from access.models import CustomUser
 from .forms import PasswordForm, EmailForm
+from .models import Privacy
 from test_util import account_util
+
+
+def create_log_setting_form(value: bool):
+    return {'log-setting': value}
 
 
 # Create your tests here.
@@ -10,56 +16,37 @@ class PrivacyViewTests(TestCase):
     def setUp(self):
         self.user1 = account_util.create_random_valid_user()
         self.user2 = account_util.create_random_valid_user()
+        self.client.force_login(self.user1)
+        # self.client.force_login(self.user2)
 
-    def test_default_privacy_is_public(self):
+    def test_default_privacy_is_off(self):
         """
         Default setting for logs should be public
         """
-        pass
+        user1_privacy = Privacy.objects.get(user=self.user1)
+        user2_privacy = Privacy.objects.get(user=self.user2)
+        self.assertTrue(user1_privacy)
+        self.assertTrue(user2_privacy)
 
-    def test_privacy_setting_set(self):
-        """
-        Users should be able to choose to make their logs public
-        """
-        pass
-
-    def test_privacy_setting_unset(self):
+    def test_privacy_on(self):
         """
         Users should be able to choose to make their logs private
         """
-        pass
+        form = create_log_setting_form(False)
+        self.client.post(reverse('settings:privacy'), form)
+        privacy_setting = Privacy.objects.get(user=self.user1)
+        self.assertFalse(privacy_setting.show_logs)
 
-    def test_private_log_detail_hidden_to_unauth_users(self):
+    def test_privacy_on_then_off(self):
         """
-        Log details should not render at all for unauthorized users
+        Users should be able to choose to make their logs public
         """
-        pass
-
-    def test_private_log_detail_not_hidden_to_owner(self):
-        """
-        Private Log details should NOT be hidden to it's own creator
-        """
-        pass
-
-    def test_all_user_profile_private_logs_hidden(self):
-        """
-        The GET response should return no logs to unauthorized users
-        """
-        pass
-
-    def test_all_profile_logs_unhidden(self):
-        """
-        All previously private logs should be available in profile GET response
-        once user resets privacy setting
-        """
-        pass
-
-    def test_all_private_logs_available_to_creator_on_profile(self):
-        """
-        All logs, regardless of privacy status, should be available to owner
-        in profile page
-        """
-        pass
+        on_form = create_log_setting_form(False)
+        off_form = create_log_setting_form(True)
+        self.client.post(reverse('settings:privacy'), on_form)
+        self.client.post(reverse('settings:privacy'), off_form)
+        privacy_setting = Privacy.objects.get(user=self.user1)
+        self.assertTrue(privacy_setting.show_logs)
 
 
 class PrivacyTemplateTests(TestCase):
@@ -72,7 +59,6 @@ class PrivacyTemplateTests(TestCase):
         Log detail should provide a message to indicate unauthorized
         view status
         """
-        pass
 
     def test_private_index_log_hidden(self):
         """
@@ -89,6 +75,7 @@ class PrivacyTemplateTests(TestCase):
     def test_all_user_profile_private_logs_hidden(self):
         """
         Render message indicating unauthorized status for private logs
+        The GET response should return no logs to unauthorized users
         """
         pass
 

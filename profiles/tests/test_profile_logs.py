@@ -31,7 +31,7 @@ class ProfileLogsTest(TestCase):
         """
         Number of logs rendered should be equal to the number of logs a user has
         """
-        food_count = 50
+        food_count = 10
         food = log_util.create_random_food()
         foods = [log_util.create_food(food.creator, food.name,
                                       food.desc, save=True)
@@ -50,7 +50,7 @@ class ProfileLogsTest(TestCase):
         """
         User profile should be able to render all logs
         """
-        food_count = 50
+        food_count = 10
         foods = [log_util.create_random_food() for _ in range(food_count)]
 
         logs = []

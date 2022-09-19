@@ -11,7 +11,7 @@ from test_util import log_util
 # Create your tests here.
 class ProfileViewTests(TestCase):
     def setUp(self):
-        self.num_users = 50
+        self.num_users = 10
         self.users = [log_util.create_random_valid_user() for _ in range(self.num_users)]
 
     def test_invalid_profile_id(self):
@@ -19,7 +19,7 @@ class ProfileViewTests(TestCase):
         Invalid user id route should return a 404 response and an error message
         """
         max_valid_id = self.num_users
-        num_loops = 50
+        num_loops = 10
 
         for i in range(num_loops):
             invalid_id = random.randint(max_valid_id + 1, sys.maxsize)
