@@ -2,7 +2,7 @@
 name: Code Coverage CI
 
 env:
-  TESTCOVERAGE_THRESHOLD: 100
+  TESTCOVERAGE_THRESHOLD: 90
 
 on:
   push:
