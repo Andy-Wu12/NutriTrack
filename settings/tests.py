@@ -1,10 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from access.models import CustomUser
-from .forms import PasswordForm, EmailForm
 from .models import Privacy
-from test_util import account_util
+from test_util import account_util, log_util
 
 
 def create_log_setting_form(value: bool):
@@ -54,50 +52,97 @@ class PrivacyTemplateTests(TestCase):
         self.user1 = account_util.create_random_valid_user()
         self.user2 = account_util.create_random_valid_user()
 
+    def make_current_user_logs_public(self, privacy_value: bool):
+        form = create_log_setting_form(privacy_value)
+        self.client.post(reverse('settings:privacy'), form)
+
     def test_private_log_detail_hidden_to_unauth_users(self):
         """
         Log detail should provide a message to indicate unauthorized
         view status
         """
+        self.client.force_login(self.user1)
+        log = log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
 
-    def test_private_index_log_hidden(self):
-        """
-        Private logs should not render at all in logs index, even to owner
-        """
-        pass
+        # Login user2 and verify error message renders when accessing that log detail
+        self.client.force_login(self.user2)
+        response = self.client.get(reverse('logs:detail', args=[log.id]))
+        self.assertContains(response, 'do not have permission')
 
     def test_private_log_detail_not_hidden_to_owner(self):
         """
         Private Log details should NOT be hidden to its own creator
         """
-        pass
+        self.client.force_login(self.user1)
+        log = log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
+
+        response = self.client.get(reverse('logs:detail', args=[log.id]))
+        self.assertNotContains(response, 'do not have permission')
+
+    def test_private_index_log_hidden(self):
+        """
+        Private logs should not render at all in logs index, even to owner
+        """
+        self.client.force_login(self.user1)
+        log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
+
+        # Hidden to owner
+        response = self.client.get(reverse('logs:index'))
+        self.assertNotContains(response, 'log-entry-container')
+
+        # Hidden to unauthorized user
+        self.client.force_login(self.user2)
+        response = self.client.get(reverse('logs:index'))
+        self.assertNotContains(response, 'log-entry-container')
+
+        # Hidden to unathenticated user
+        self.client.logout()
+        response = self.client.get(reverse('logs:index'))
+        self.assertNotContains(response, 'log-entry-container')
 
     def test_all_user_profile_private_logs_hidden(self):
         """
         Render message indicating unauthorized status for private logs
         The GET response should return no logs to unauthorized users
         """
-        pass
+        self.client.force_login(self.user1)
+        log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
 
-    def test_all_profile_logs_unhidden(self):
+        self.client.force_login(self.user2)
+        response = self.client.get(reverse('profiles:user', args=[self.user1.id]))
+        self.assertContains(response, 'logs are private')
+
+    def test_all_user_profile_logs_unhidden(self):
         """
         All previously private logs should be rendered on profile
         if user resets privacy setting
         """
-        pass
+        self.client.force_login(self.user1)
+        log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
+        self.make_current_user_logs_public(True)
 
-    def test_all_private_logs_available_to_creator(self):
+        self.client.force_login(self.user2)
+        response = self.client.get(reverse('profiles:user', args=[self.user1.id]))
+        self.assertNotContains(response, 'logs are private')
+        self.assertContains(response, 'logs-container')
+
+    def test_all_user_profile_logs_available_to_creator(self):
         """
         All logs, regardless of privacy status, should be rendered on profile page for owner
         """
-        pass
+        self.client.force_login(self.user1)
+        log_util.create_random_log(self.user1)
+        self.make_current_user_logs_public(False)
 
-    def test_all_private_logs_available_to_creator_on_profile(self):
-        """
-        All logs, regardless of privacy status, should render on profile page
-        if current user is owner
-        """
-        pass
+        # Private
+        response = self.client.get(reverse('profiles:user', args=[self.user1.id]))
+        self.assertNotContains(response, 'logs are private')
+        self.assertContains(response, 'logs-container')
 
 
 class EmailChangeTests(TestCase):
