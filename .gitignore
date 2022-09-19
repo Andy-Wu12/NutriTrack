@@ -41,3 +41,4 @@ wheels/
 # Code coverage
 .coverage
 /htmlcov
+coverage*
