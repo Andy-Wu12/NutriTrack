@@ -2,7 +2,7 @@
 name: Code Coverage CI
 
 env:
-  TESTCOVERAGE_THRESHOLD: '90'
+  TESTCOVERAGE_THRESHOLD: 100
 
 on:
   push:
@@ -32,4 +32,4 @@ jobs:
     - name: Run Coverage
       run: |
         coverage run ./manage.py test
-        coverage report --fail-under=90
+        coverage report --fail-under=$TESTCOVERAGE_THRESHOLD
