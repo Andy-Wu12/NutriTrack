@@ -17,8 +17,8 @@ jobs:
     steps:
     - name: Checkout action
       uses: actions/checkout@v2
-    - name: Django Coverage action
-      uses: actions/python-django-coverage-github-action@0.9
+    - name: Python Django Coverage GitHub Action
+      uses: dc740/django-coveragepy-github-action@0.9
       with:
         django-app: 'food-log'
         minimum-coverage: '90'
