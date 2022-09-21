@@ -198,7 +198,8 @@ class DeleteAccountTests(TestCase):
         """
         If the password entered doesn't match the current user's render an error message
         """
-        pass
+        self.client.force_login(self.user)
+
 
     def test_valid_password_submission_deletes_account(self):
         """
