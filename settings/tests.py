@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.hashers import check_password
 
 from .models import Privacy
 from access.models import CustomUser
@@ -140,6 +141,12 @@ class PrivacyTemplateTests(TestCase):
         self.assertNotContains(response, 'logs are private')
         self.assertContains(response, 'logs-container')
 
+    def test_unauth_access_redirects_login(self):
+        response = self.client.get(reverse('settings:privacy'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('login', response.headers.get('location'))
+
 
 class EmailChangeTests(TestCase):
     def setUp(self):
@@ -190,6 +197,13 @@ class EmailChangeTests(TestCase):
         response = self.client.post(reverse('settings:email'), email_form)
         self.assertContains(response, 'Enter a valid email address')
 
+    def test_unauth_access_redirects_login(self):
+        response = self.client.get(reverse('settings:email'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('login', response.headers.get('location'))
+
+
 class DeleteAccountTests(TestCase):
     def setUp(self):
         self.default_user = account_util.create_default_valid_user()
@@ -237,28 +251,52 @@ class DeleteAccountTests(TestCase):
         # Need a way to simulate having an available image for this test
         pass
 
-class ChangePasswordTests(TestCase):
+    def test_unauth_access_redirects_login(self):
+        response = self.client.get(reverse('settings:delete-acc'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('login', response.headers.get('location'))
+
+
+class ChangePasswordViewTests(TestCase):
     def setUp(self):
         self.uname = account_util.valid_uname
         self.pw = account_util.valid_pass
         self.email = account_util.valid_email
-        self.user = account_util.create_user(self.uname, self.pw, email=self.email)
+        self.user = account_util.create_user(self.uname, self.pw, email=self.email, save=True)
 
     def test_invalid_pass_confirmation_message(self):
         """
         Invalid password / confirmation should render an message indicating as such
+        Status code should be 200 and current template should be re-rendered
         """
-        pass
+        self.client.force_login(self.user)
+        pw_len = 20
+        bad_confirmation = log_util.generateRandStr(pw_len)
+        change_pass_form = settings_util.create_change_password_form(self.pw, bad_confirmation)
+        response = self.client.post(reverse('settings:password'), change_pass_form)
 
-    def test_invalid_pass_length_message(self):
-        """
-        Password field should render a message indicating invalid password length
-        if it is too short
-        """
-        pass
+        self.assertTemplateUsed(response, 'settings/password.html')
+        self.assertContains(response, 'Passwords do not match')
 
     def test_valid_password_change(self):
         """
         Password should change if both input fields match exactly
+        This should automatically log the user out and redirect them to login page
         """
-        pass
+        self.client.force_login(self.user)
+        pw_len = 25
+        new_pass = log_util.generateRandStr(pw_len)
+        change_pass_form = settings_util.create_change_password_form(new_pass, new_pass)
+        response = self.client.post(reverse('settings:password'), change_pass_form)
+
+        self.assertRedirects(response, reverse('access:login'))
+
+        user_obj = CustomUser.objects.get(pk=self.user.id)
+        self.assertTrue(check_password(new_pass, user_obj.password))
+
+    def test_unauth_access_redirects_login(self):
+        response = self.client.get(reverse('settings:password'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('login', response.headers.get('location'))
