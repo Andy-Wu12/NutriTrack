@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 
 from .forms import PasswordForm, EmailForm, DeleteForm
-from access.models import CustomUser
+from access.models import CustomUser, default_avatar
 from logs.models import Log
 from .models import Privacy
 
@@ -108,8 +108,9 @@ def delete_account_data(user: CustomUser):
             os.remove(img_path)
 
     # Delete profile picture
-    pro_pic_path = user.profile_picture.path
-    if os.path.exists(pro_pic_path):
-        os.remove(pro_pic_path)
+    if user.profile_picture != default_avatar:
+        pro_pic_path = user.profile_picture.path
+        if os.path.exists(pro_pic_path):
+            os.remove(pro_pic_path)
 
     user.delete()
