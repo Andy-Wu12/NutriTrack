@@ -192,6 +192,7 @@ class EmailChangeTests(TestCase):
 
 class DeleteAccountTests(TestCase):
     def setUp(self):
+        self.default_user = account_util.create_default_valid_user()
         self.user = account_util.create_random_valid_user()
 
     def test_invalid_password_error_message(self):
@@ -199,15 +200,45 @@ class DeleteAccountTests(TestCase):
         If the password entered doesn't match the current user's render an error message
         """
         self.client.force_login(self.user)
+        pass_len = 10
+        delete_form = settings_util.create_delete_form(log_util.generateRandStr(pass_len))
+        response = self.client.post(reverse('settings:delete-acc'), delete_form)
 
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Incorrect password')
 
-    def test_valid_password_submission_deletes_account(self):
+    def test_valid_submission_redirects_to_signup(self):
         """
         Entering the correct password should result in account deletion,
         and redirection to sign up page
         """
-        pass
+        self.client.force_login(self.default_user)
+        delete_form = settings_util.create_delete_form(account_util.valid_pass)
+        response = self.client.post(reverse('settings:delete-acc'), delete_form)
 
+        self.assertEqual(response.status_code, 302)
+
+    def test_valid_submission_deletes_account_with_default_avatar(self):
+        """
+        Entering correct password should result in account deletion.
+        If user has default avatar, the avatar should NOT be deleted
+        """
+        self.client.force_login(self.default_user)
+        delete_form = settings_util.create_delete_form(account_util.valid_pass)
+        self.client.post(reverse('settings:delete-acc'), delete_form)
+
+        self.assertFalse(CustomUser.objects.filter(email=self.default_user.email).exists())
+
+    def test_valid_submission_deletes_account_with_custom_avatar(self):
+        """
+        Entering correct password should result in account deletion.
+        If user has has custom avatar, it should be deleted along with the account
+        """
+        self.client.force_login(self.default_user)
+        delete_form = settings_util.create_delete_form(account_util.valid_pass)
+        self.client.post(reverse('settings:delete-acc'), delete_form)
+
+        self.assertFalse(CustomUser.objects.filter(email=self.default_user.email).exists())
 
 class ChangePasswordTests(TestCase):
     def setUp(self):
