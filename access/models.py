@@ -4,6 +4,7 @@ from django.utils import timezone
 
 default_avatar = "/default/default-avatar.jpg"
 
+
 # Create your models here.
 class CustomUser(AbstractUser):
     profile_picture = models.ImageField(upload_to='avatars', default=default_avatar)

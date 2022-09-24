@@ -44,6 +44,7 @@ def create_user(username: str, password: str = '', fname: str = '', lname: str =
         generatePrivacySetting(user)
     return user
 
+
 def generatePrivacySetting(user: CustomUser):
     privacy_setting = Privacy(user=user)
     privacy_setting.save()

@@ -9,6 +9,7 @@ from logs.models import Log
 from .forms import ProfileForm
 from settings.models import Privacy
 
+
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:

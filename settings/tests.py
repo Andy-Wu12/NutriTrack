@@ -6,6 +6,7 @@ from .models import Privacy
 from access.models import CustomUser
 from test_util import util, account_util, log_util, settings_util
 
+
 # Create your tests here.
 class PrivacyViewTests(TestCase):
     def setUp(self):
