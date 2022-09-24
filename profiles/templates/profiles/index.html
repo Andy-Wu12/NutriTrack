@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block body %}
+    <form id="query-form" action="{% url 'profiles:index' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+    </form>
+    <br/><br/>
     {% if users %}
         {% for target in users %}
             <a href="{% url 'profiles:user' target.id %}"> {{ target.username }} </a>
