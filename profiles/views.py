@@ -20,7 +20,7 @@ def index(request):
             username_query = search_form.cleaned_data['username']
             users = CustomUser.objects.filter(username__icontains=username_query).exclude(username=request.user)
             context['users'] = users
-            context['form'] = UserSearchForm()
+            context['form'] = search_form
             return render(request, 'profiles/index.html', context)
         else:
             return HttpResponseRedirect(reverse('profiles:index'))
