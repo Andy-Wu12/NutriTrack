@@ -6,19 +6,34 @@ from django.utils import timezone
 
 from access.models import CustomUser, default_avatar
 from logs.models import Log
-from .forms import ProfileForm
+from .forms import ProfileForm, UserSearchForm
 from settings.models import Privacy
 
 
 # Create your views here.
 def index(request):
+    context = {}
+
+    if request.method == 'POST':
+        search_form = UserSearchForm(request.POST)
+        if search_form.is_valid():
+            username_query = search_form.cleaned_data['username']
+            users = CustomUser.objects.filter(username__icontains=username_query).exclude(username=request.user)
+            context['users'] = users
+            context['form'] = UserSearchForm()
+            return render(request, 'profiles/index.html', context)
+        else:
+            return HttpResponseRedirect(reverse('profiles:index'))
+
     if request.user.is_authenticated:
         uid = request.user.id
         users = CustomUser.objects.exclude(pk=uid).order_by('username')
     else:
         users = CustomUser.objects.all().order_by('username')
 
-    return render(request, 'profiles/index.html', {'users': users})
+    context['users'] = users
+    context['form'] = UserSearchForm()
+    return render(request, 'profiles/index.html', context)
 
 
 def user(request, user_id):
