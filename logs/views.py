@@ -4,19 +4,20 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .models import Food, Log, Comment
-from .forms import FoodForm
+from .forms import FoodForm, LogSearchForm
 from settings.models import Privacy
 
 
 # Should list all logs globally like some sort of home page feed
 # Taking into account user privacy settings
 def index(request):
-    public_log_filter = Privacy.objects.filter(show_logs=True).values_list('id')
+    context = {}
+
+    public_log_filter = get_privacy_settings(True)
     latest_logs = Log.objects.filter(
         pub_date__lte=timezone.now(), creator__in=public_log_filter).order_by('-pub_date')
-    context = {
-        'latest_logs': latest_logs
-    }
+    context['latest_logs'] = latest_logs
+    context['form'] = LogSearchForm()
     return render(request, 'logs/index.html', context)
 
 
@@ -100,3 +101,7 @@ def comment(request, log_id):
         new_comment.save()
     # Redirect to prevent post data from being reused in case of back button click
     return HttpResponseRedirect(reverse('logs:detail', args=(log_id,)))
+
+
+def get_privacy_settings(privacy_setting: bool):
+    return Privacy.objects.filter(show_logs=privacy_setting).values_list('id')
