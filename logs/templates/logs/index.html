@@ -19,6 +19,7 @@
         {% endif %}
     </h1>
     <form action="{% url 'logs:index' %}" method="POST">
+        {% csrf_token %}
         {{ form }}
     </form>
     <br/>
