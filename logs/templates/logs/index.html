@@ -18,6 +18,10 @@
             <a href="{% url 'access:signup' %}"> Sign Up </a>
         {% endif %}
     </h1>
+    <form action="{% url 'logs:index' %}" method="POST">
+        {{ form }}
+    </form>
+    <br/>
     <main class="main-content">
         <section class="food-log-data">
             {% if latest_logs %}

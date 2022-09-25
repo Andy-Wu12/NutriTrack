@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm, Textarea
 from django.core.exceptions import ValidationError
 
@@ -21,3 +22,7 @@ class FoodForm(ModelForm):
             return ValidationError("Must be a number at least 0")
 
         return calories
+
+
+class LogSearchForm(forms.Form):
+    log_data = forms.CharField(label='Search logs', required=False)
