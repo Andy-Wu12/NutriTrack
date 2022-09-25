@@ -45,3 +45,6 @@ coverage*
 
 # Production
 staticfiles/
+
+# Mac OS X
+*.DS_Store
