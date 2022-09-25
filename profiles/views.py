@@ -18,7 +18,8 @@ def index(request):
         search_form = UserSearchForm(request.POST)
         if search_form.is_valid():
             username_query = search_form.cleaned_data['username']
-            users = CustomUser.objects.filter(username__icontains=username_query).exclude(username=request.user)
+            users = CustomUser.objects.filter(username__icontains=username_query)\
+                .exclude(username=request.user.username).order_by('username')
             context['users'] = users
             context['form'] = search_form
             return render(request, 'profiles/index.html', context)
