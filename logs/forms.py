@@ -25,4 +25,4 @@ class FoodForm(ModelForm):
 
 
 class LogSearchForm(forms.Form):
-    log_data = forms.CharField(label='Search logs', required=False)
+    query = forms.CharField(label='Search logs by food name or creator', required=False)

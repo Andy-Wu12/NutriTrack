@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import Q
 
 from .models import Food, Log, Comment
 from .forms import FoodForm, LogSearchForm
@@ -16,6 +17,16 @@ def index(request):
     public_log_filter = get_privacy_settings(True)
     latest_logs = Log.objects.filter(
         pub_date__lte=timezone.now(), creator__in=public_log_filter).order_by('-pub_date')
+
+    if request.method == 'POST':
+        query_form = LogSearchForm(request.POST)
+        if query_form.is_valid():
+            # Might be better to separate query options into separate forms
+            query = query_form.cleaned_data['query']
+            latest_logs = latest_logs.filter(
+                Q(creator__username__icontains=query) | Q(food__name__icontains=query)
+            ).order_by('-pub_date')
+
     context['latest_logs'] = latest_logs
     context['form'] = LogSearchForm()
     return render(request, 'logs/index.html', context)
