@@ -28,7 +28,7 @@ def index(request):
             ).order_by('-pub_date')
 
     context['latest_logs'] = latest_logs
-    context['form'] = LogSearchForm()
+    context['form'] = LogSearchForm(request.POST)
     return render(request, 'logs/index.html', context)
 
 
