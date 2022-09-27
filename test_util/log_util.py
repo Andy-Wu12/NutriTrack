@@ -74,3 +74,6 @@ def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
         time = time + timedelta(days=day_offset)
     return Comment.objects.create(creator=creator, log=assoc_log,
                                   comment=comment_text, pub_date=time)
+
+def create_comment_form(comment: str):
+    return {'comment-text': comment}
