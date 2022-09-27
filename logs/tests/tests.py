@@ -1,14 +1,15 @@
 import random
+
 from datetime import timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import Log, Comment
+from logs.models import Log, Comment
 from access.models import CustomUser
 from access.tests.test_login import create_login_form
-from test_util import log_util, account_util
+from test_util import log_util, account_util, settings_util
 
 valid_uname = account_util.valid_uname
 valid_pass = account_util.valid_pass
@@ -49,6 +50,101 @@ class CommentModelTests(TestCase):
         recent_comment = Comment(pub_date=time)
 
         self.assertIs(recent_comment.is_recent(), True)
+
+
+class CommentViewTests(TestCase):
+    def setUp(self):
+        self.user = account_util.create_random_valid_user()
+
+    def test_get_comment_route_redirects_log(self):
+        """
+        GETting the add-comment route should automatically redirect user
+        to corresponding log detail path
+        """
+        log = log_util.create_random_log(self.user)
+
+        response = self.client.get(reverse('logs:add-comment', args=[log.id]))
+        self.assertRedirects(response, reverse('logs:detail', args=[log.id]))
+
+    def test_empty_comment_not_saved(self):
+        """
+        Empty input (including lengthy input with only whitespace) should
+        be considered invalid
+        """
+        self.client.force_login(self.user)
+        log = log_util.create_random_log(self.user)
+
+        comment_form = log_util.create_comment_form('')
+        self.client.post(reverse('logs:add-comment', args=[log.id]), comment_form)
+        self.assertFalse(Comment.objects.filter(log=log).exists())
+
+        comment_form = log_util.create_comment_form('     ')
+        self.client.post(reverse('logs:add-comment', args=[log.id]), comment_form)
+        self.assertFalse(Comment.objects.filter(log=log).exists())
+
+    def test_comment_on_invalid_log_id_fails(self):
+        """
+        Users should not be able to comment on a log that doesn't exist
+        """
+        self.client.force_login(self.user)
+
+        comment_form = log_util.create_comment_form('')
+        response = self.client.post(reverse('logs:add-comment', args=[1]), comment_form)
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(Comment.objects.all().exists())
+
+    def test_valid_comment_saved(self):
+        """
+        A valid comment should be saved to db and render in template
+        """
+        self.client.force_login(self.user)
+        log = log_util.create_random_log(self.user)
+
+        comment_form = log_util.create_comment_form('test_random_comment')
+        self.client.post(reverse('logs:add-comment', args=[log.id]), comment_form)
+        self.assertTrue(Comment.objects.filter(log=log).exists())
+
+    def test_valid_comment_strips_whitespace(self):
+        """
+        All leading and trailing whitespace should be stripped
+        """
+        self.client.force_login(self.user)
+        log = log_util.create_random_log(self.user)
+
+        comment_form = log_util.create_comment_form(' test_random_comment  ')
+        self.client.post(reverse('logs:add-comment', args=[log.id]), comment_form)
+        self.assertTrue(Comment.objects.filter(log=log).exists())
+
+    def test_unauthenticated_comment_fails(self):
+        """
+        Unauthenticated users should not be allowed to comment
+        """
+        self.client.force_login(self.user)
+        log = log_util.create_random_log(self.user)
+        self.client.logout()
+
+        comment_form = log_util.create_comment_form(' test_random_comment  ')
+        self.client.post(reverse('logs:add-comment',
+                                 args=[log.id]), comment_form)
+        self.assertFalse(Comment.objects.filter(log=log).exists())
+
+    def test_unauthorized_comment_fails_in_private_log(self):
+        """
+        Users that are not the owner should not be allowed to comment
+        on a private log
+        """
+        # Create log for user1 and make it private
+        self.client.force_login(self.user)
+        log = log_util.create_random_log(self.user)
+        self.client.post(reverse('settings:privacy'),
+                         settings_util.create_log_setting_form(False))
+
+        user2 = account_util.create_random_valid_user()
+        self.client.force_login(user2)
+        comment_form = log_util.create_comment_form("user2's comment!")
+        self.client.post(reverse('logs:add-comment',
+                                 args=[log.id]), comment_form)
+        self.assertFalse(Comment.objects.filter(log=log).exists())
 
 
 class LogIndexViewTests(TestCase):
@@ -171,6 +267,48 @@ class LogDetailViewTests(TestCase):
         self.assertEqual(response.context['log'], log)
         self.assertQuerysetEqual(response.context['comment_list'], comments, ordered=False)
 
+    def test_valid_delete_log_request(self):
+        """
+        Only owner of log should be able to delete it
+        Deleted log should no longer exist in db or render in templates
+        """
+        user = account_util.create_default_valid_user()
+        self.client.force_login(user)
+        log = log_util.create_random_log(user)
+
+        response = self.client.get(reverse('logs:detail', args=[log.id]))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(reverse('logs:detail', args=[log.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Log.objects.filter(pk=log.id).exists())
+
+    def test_invalid_delete_log_unauthenticated(self):
+        """
+        Unauthenticated users should not be allowed to delete logs
+        """
+        log = log_util.create_default_log()
+
+        response = self.client.get(reverse('logs:detail', args=[log.id]))
+        self.assertEqual(response.status_code, 200)
+
+        self.client.post(reverse('logs:detail', args=[log.id]))
+        self.assertTrue(Log.objects.filter(pk=log.id).exists())
+
+    def test_invalid_delete_log_unauthorized(self):
+        """
+        Users should not be allowed to delete logs of other users
+        """
+        user1 = account_util.create_random_valid_user()
+        user2 = account_util.create_random_valid_user()
+
+        log = log_util.create_random_log(user1)
+
+        # Log in user2 and attempt to delete user1's log
+        self.client.force_login(user2)
+        self.client.post(reverse('logs:detail', args=[log.id]))
+        self.assertTrue(Log.objects.filter(pk=log.id).exists())
+
 
 class LogSessionTests(TestCase):
     # Authentication status messages
@@ -251,7 +389,7 @@ class CreateLogTests(TestCase):
         self.client.post(reverse('logs:create-log'), form_data)
 
     def setUp(self):
-        account_util.create_default_valid_user()
+        self.user = account_util.create_default_valid_user()
 
     def test_log_has_correct_creator(self):
         """
@@ -281,7 +419,7 @@ class CreateLogTests(TestCase):
         """
         Ensure created log has the correct # calories
         """
-        self.create_valid_default_log(logged_in=True)
+        self.create_valid_default_log()
         log = Log.objects.get(pk=1)
         self.assertEqual(log.food.calories, self.calories)
 

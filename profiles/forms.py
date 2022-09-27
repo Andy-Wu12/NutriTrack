@@ -6,4 +6,4 @@ class ProfileForm(forms.Form):
 
 
 class UserSearchForm(forms.Form):
-    username = forms.CharField(label='Search username', required=False)
+    query = forms.CharField(label='Search username', required=False)

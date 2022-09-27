@@ -16,10 +16,12 @@ def create_default_log():
     return log
 
 
-def create_random_log(user: CustomUser):
+def create_random_log(user: CustomUser, image_path=None):
     food = create_random_food()
+    if image_path:
+        food.image = image_path
+        food.save()
     log = create_log(user, food, timezone.now(), save=True)
-
     return log
 
 
@@ -72,3 +74,6 @@ def create_comment(creator: CustomUser, assoc_log: Log, comment_text: str,
         time = time + timedelta(days=day_offset)
     return Comment.objects.create(creator=creator, log=assoc_log,
                                   comment=comment_text, pub_date=time)
+
+def create_comment_form(comment: str):
+    return {'comment-text': comment}
