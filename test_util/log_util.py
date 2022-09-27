@@ -16,10 +16,12 @@ def create_default_log():
     return log
 
 
-def create_random_log(user: CustomUser):
+def create_random_log(user: CustomUser, image_path=None):
     food = create_random_food()
+    if image_path:
+        food.image = image_path
+        food.save()
     log = create_log(user, food, timezone.now(), save=True)
-
     return log
 
 

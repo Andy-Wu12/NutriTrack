@@ -1,11 +1,12 @@
 import random
+
 from datetime import timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import Log, Comment
+from logs.models import Log, Comment
 from access.models import CustomUser
 from access.tests.test_login import create_login_form
 from test_util import log_util, account_util
@@ -251,7 +252,7 @@ class CreateLogTests(TestCase):
         self.client.post(reverse('logs:create-log'), form_data)
 
     def setUp(self):
-        account_util.create_default_valid_user()
+        self.user = account_util.create_default_valid_user()
 
     def test_log_has_correct_creator(self):
         """
@@ -281,7 +282,7 @@ class CreateLogTests(TestCase):
         """
         Ensure created log has the correct # calories
         """
-        self.create_valid_default_log(logged_in=True)
+        self.create_valid_default_log()
         log = Log.objects.get(pk=1)
         self.assertEqual(log.food.calories, self.calories)
 
@@ -402,3 +403,9 @@ class CreateLogViewTests(TestCase):
         self.assertContains(response, f'{user.username}')
         self.assertContains(response, 'uploaded')
         self.assertContains(response, f'{self.food_name}')
+
+    def test_log_no_image_is_valid(self):
+        pass
+
+    def test_log_with_image_is_valid(self):
+        pass
