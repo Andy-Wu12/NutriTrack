@@ -19,3 +19,8 @@ a:link, a:visited {
 a:hover {
     color: var(--link-hover-color);
 }
+
+.textarea-output {
+    white-space: pre;
+    overflow: auto;
+}

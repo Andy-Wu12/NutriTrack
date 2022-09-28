@@ -21,9 +21,9 @@
                 <div class="log-body">
                     <div class="log-food-info">
                         <h2 class="body-header"> Description </h2>
-                        <p class="body-text"> {{ log.food.desc }} </p>
+                        <p class="body-text textarea-output"> {{ log.food.desc }} </p>
                         <h2 class="body-header"> Ingredients </h2>
-                        <p class="body-text"> {{ log.food.ingredients }} </p>
+                        <p class="body-text textarea-output"> {{ log.food.ingredients }} </p>
                         <h2 class="body-header"> Calories: {{ log.food.calories }} </h2>
                     </div>
                 </div>
@@ -70,6 +70,7 @@
                 </p>
             {% endif %}
             <br/>
+            {# Render comment list #}
             {% if comment_list %}
                 <div id="comment-list-container">
                     {% for comment in comment_list %}
@@ -87,7 +88,7 @@
                                     </div>
                                     <div class="comment-date"> {{ comment.pub_date.date }} </div>
                                 </div>
-                                <p class="comment-body"> {{ comment.comment }} </p>
+                                <p class="comment-body textarea-output"> {{ comment.comment }} </p>
                             </div>
                         </div>
                     {% endfor %}
