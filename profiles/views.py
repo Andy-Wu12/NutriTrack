@@ -17,7 +17,7 @@ def index(request):
     if request.method == 'POST':
         search_form = UserSearchForm(request.POST)
         if search_form.is_valid():
-            username_query = search_form.cleaned_data['username']
+            username_query = search_form.cleaned_data['query']
             users = CustomUser.objects.filter(username__icontains=username_query)\
                 .exclude(username=request.user.username).order_by('username')
             context['users'] = users
