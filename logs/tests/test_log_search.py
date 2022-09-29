@@ -34,7 +34,7 @@ class LogSearchTests(TestCase):
         """
         Non-empty query with no results should return message indicating as such
         """
-        no_result_query = search_query_util.get_invalid_query_input(self.food_name, self.user.username)
+        no_result_query = search_query_util.get_invalid_query_input([self.food_name, self.user.username])
         for c in no_result_query:
             response = self.client.post(reverse('logs:index'),
                                         search_query_util.create_search_form(c))
