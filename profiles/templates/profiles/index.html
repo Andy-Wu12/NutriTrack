@@ -16,10 +16,11 @@
     </form>
     <br/><br/>
     {% if users %}
-        {% for target in users %}
-            <a href="{% url 'profiles:user' target.id %}"> {{ target.username }} </a>
-            <br/>
-        {% endfor %}
+        <ul>
+            {% for target in users %}
+                <li><a href="{% url 'profiles:user' target.id %}"> {{ target.username }} </a></li>
+            {% endfor %}
+        </ul>
     {% else  %}
         <p> No users currently exist! </p>
     {% endif %}
