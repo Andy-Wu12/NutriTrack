@@ -58,15 +58,16 @@ def user(request, user_id):
         return HttpResponse('User does not exist!', status=404)
 
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            old_pic = user_obj.profile_picture
-            new_pic = form.cleaned_data['profile_picture']
-            user_obj.profile_picture = new_pic
-            user_obj.save()
-            if old_pic != default_avatar:
-                if os.path.exists(old_pic.path):
-                    os.remove(old_pic.path)
+        if request.user.id == user_id:
+            form = ProfileForm(request.POST, request.FILES)
+            if form.is_valid():
+                old_pic = user_obj.profile_picture
+                new_pic = form.cleaned_data['profile_picture']
+                user_obj.profile_picture = new_pic
+                user_obj.save()
+                if old_pic != default_avatar:
+                    if os.path.exists(old_pic.path):
+                        os.remove(old_pic.path)
 
         return HttpResponseRedirect(reverse('profiles:user', args=(user_id, )))
 
