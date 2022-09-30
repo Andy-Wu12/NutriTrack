@@ -26,9 +26,9 @@
                 <form enctype="multipart/form-data" action="{% url 'profiles:user' user.id %}"
                 method="POST">
                     {% csrf_token %}
-                        {{ form }}
-                        <button type="submit"> Upload </button>
-                        <br/><br/>
+                    {{ form }}
+                    <button type="submit"> Upload </button>
+                    <br/><br/>
                 </form>
             {% endif %}
         </section>
