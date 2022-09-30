@@ -67,8 +67,10 @@ def create_log(request):
             food_name = form.cleaned_data['name']
             desc = form.cleaned_data['desc']
             ingreds = form.cleaned_data['ingredients']
-            calories = form.cleaned_data['calories']
             img = form.cleaned_data.get('image')
+
+            # Calculate calories based off ingredients provided
+            calories = 0
 
             food_obj = Food(creator=request.user, name=food_name, desc=desc,
                             ingredients=ingreds, calories=calories, image=img)
@@ -123,3 +125,12 @@ def comment(request, log_id):
 
 def get_privacy_settings(privacy_setting: bool):
     return Privacy.objects.filter(show_logs=privacy_setting).values_list('id')
+
+def fetchIngredientData(ingredientsStr: str):
+    ingredients = ingredientsStr.split(',')
+    print(ingredients)
+    return ingredients
+
+def parseCalorieData(ingredientsInfo):
+    calories = 0
+    return calories
