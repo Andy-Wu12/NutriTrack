@@ -1,3 +1,11 @@
 .profile-picture {
     width: clamp(100px, 50vw, 400px);
 }
+
+ul {
+    list-style: none;
+}
+
+li {
+    margin: 10px 0;
+}
