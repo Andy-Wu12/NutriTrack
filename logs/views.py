@@ -130,6 +130,8 @@ def comment(request, log_id):
 def get_privacy_settings(privacy_setting: bool):
     return Privacy.objects.filter(show_logs=privacy_setting).values_list('id')
 
+
+# https://developer.edamam.com/food-database-api-docs for API documentation
 def fetchIngredientData(ingredientsStr: str):
     ingredients = ingredientsStr.split(',')
     # URL encode ' '
@@ -142,9 +144,16 @@ def fetchIngredientData(ingredientsStr: str):
 
     response_json = requests.get(query_url).json()
     ingred_json = response_json.get('parsed')
-
+    # print(ingred_json)
     return ingred_json
 
-def parseCalorieData(ingredientsInfo):
-    calories = 0
-    return calories
+
+def parseCalorieData(ingredients_json_list):
+    total_calories = 0
+
+    for ingred_dict in ingredients_json_list:
+        print(ingred_dict.get('food'))
+        nutrition_dict = ingred_dict.get('food').get('nutrients')
+        total_calories += nutrition_dict.get('ENERC_KCAL')
+
+    return total_calories
