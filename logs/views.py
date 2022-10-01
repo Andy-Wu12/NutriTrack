@@ -151,8 +151,11 @@ def fetchIngredientData(ingredientsStr: str):
 def parseCalorieData(ingredients_json_list):
     total_calories = 0
 
+    if not ingredients_json_list:
+        return total_calories
+
     for ingred_dict in ingredients_json_list:
-        # print(ingred_dict.get('food'))
+        print(ingred_dict.get('food'))
         nutrition_dict = ingred_dict.get('food').get('nutrients')
         total_calories += nutrition_dict.get('ENERC_KCAL')
 
