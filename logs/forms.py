@@ -10,7 +10,7 @@ class FoodForm(ModelForm):
         fields = ['name', 'desc', 'ingredients', 'image']
         widgets = {
             'desc': Textarea(),
-            'ingredients': Textarea({"placeholder": "chicken,string beans,white rice"}),
+            'ingredients': Textarea({"placeholder": "chicken breast, string beans, 1 cup white rice"}),
         }
         labels = {
             'ingredients': f'Enter a list of ingredients that were part'
