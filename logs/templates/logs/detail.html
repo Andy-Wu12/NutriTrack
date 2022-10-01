@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block page_links %}
+    <script src="https://developer.edamam.com/attribution/badge.js"></script>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'logs/detail-layout.css' %}">
@@ -24,7 +25,8 @@
                         <p class="body-text textarea-output"> {{ log.food.desc }} </p>
                         <h2 class="body-header"> Ingredients </h2>
                         <p class="body-text textarea-output"> {{ log.food.ingredients }} </p>
-                        <h2 class="body-header"> Calories: {{ log.food.calories }} </h2>
+                        <h2 class="body-header"> Estimated Calories: {{ log.food.calories }} </h2>
+                        <div id="edamam-badge" data-color="white"></div>
                     </div>
                 </div>
                 <br/>
