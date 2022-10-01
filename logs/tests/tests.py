@@ -415,14 +415,6 @@ class CreateLogTests(TestCase):
         log = Log.objects.get(pk=1)
         self.assertEqual(str(log.food.ingredients), self.ingredients)
 
-    def test_log_has_correct_calories(self):
-        """
-        Ensure created log has the correct # calories
-        """
-        self.create_valid_default_log()
-        log = Log.objects.get(pk=1)
-        self.assertEqual(log.food.calories, self.calories)
-
 
 class CreateLogViewTests(TestCase):
     food_name = 'test food'
@@ -435,7 +427,7 @@ class CreateLogViewTests(TestCase):
         self.client.post(reverse('access:login'), login_form.data)
 
     def populate_log_create_form(self, name=True, desc=True, ingredients=True,
-                                 calories=True):
+                                 ):
         form_data = {}
         if name:
             form_data['name'] = self.food_name
@@ -443,8 +435,6 @@ class CreateLogViewTests(TestCase):
             form_data['desc'] = self.desc
         if ingredients:
             form_data['ingredients'] = self.ingredients
-        if calories:
-            form_data['calories'] = self.calories
         return form_data
 
     def setUp(self):
@@ -476,16 +466,6 @@ class CreateLogViewTests(TestCase):
         """
         self.login_default_user()
         form_data = self.populate_log_create_form(ingredients=False)
-
-        response = self.client.post(reverse('logs:create-log'), form_data)
-        self.assertEqual(response.status_code, 400)
-
-    def test_form_missing_calories(self):
-        """
-        # Calories required for log creation
-        """
-        self.login_default_user()
-        form_data = self.populate_log_create_form(calories=False)
 
         response = self.client.post(reverse('logs:create-log'), form_data)
         self.assertEqual(response.status_code, 400)
@@ -524,7 +504,6 @@ class CreateLogViewTests(TestCase):
         self.assertEqual(log.food.name, self.food_name)
         self.assertEqual(log.food.desc, self.desc)
         self.assertEqual(log.food.ingredients, self.ingredients)
-        self.assertEqual(log.food.calories, self.calories)
 
     def test_valid_log_creation_exists_in_view(self):
         """
