@@ -139,7 +139,7 @@ def fetchIngredientData(ingredientsStr: str):
 
     # Get the Parsed response
     query_url = 'https://api.edamam.com/api/food-database/v2/parser'
-    query_url += f'?app_id={os.getenv("APP_ID")}&app_key={os.getenv("APP_KEY")}'
+    query_url += f'?app_id={os.environ["APP_ID"]}&app_key={os.environ["APP_KEY"]}'
     query_url += f'&ingr={ingred_query}&nutrition-type=cooking'
 
     response_json = requests.get(query_url).json()
@@ -152,7 +152,7 @@ def parseCalorieData(ingredients_json_list):
     total_calories = 0
 
     for ingred_dict in ingredients_json_list:
-        print(ingred_dict.get('food'))
+        # print(ingred_dict.get('food'))
         nutrition_dict = ingred_dict.get('food').get('nutrients')
         total_calories += nutrition_dict.get('ENERC_KCAL')
 
