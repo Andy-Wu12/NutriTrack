@@ -1,3 +1,5 @@
+import os
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -8,6 +10,7 @@ from .models import Food, Log, Comment
 from .forms import FoodForm, LogSearchForm
 from settings.models import Privacy
 
+import requests
 
 # Should list all logs globally like some sort of home page feed
 # Taking into account user privacy settings
@@ -70,7 +73,8 @@ def create_log(request):
             img = form.cleaned_data.get('image')
 
             # Calculate calories based off ingredients provided
-            calories = 0
+            ingred_json = fetchIngredientData(ingreds)
+            calories = parseCalorieData(ingred_json)
 
             food_obj = Food(creator=request.user, name=food_name, desc=desc,
                             ingredients=ingreds, calories=calories, image=img)
@@ -128,8 +132,18 @@ def get_privacy_settings(privacy_setting: bool):
 
 def fetchIngredientData(ingredientsStr: str):
     ingredients = ingredientsStr.split(',')
-    print(ingredients)
-    return ingredients
+    # URL encode ' '
+    ingred_query = '%20and%20'.join(ingredients)
+
+    # Get the Parsed response
+    query_url = 'https://api.edamam.com/api/food-database/v2/parser'
+    query_url += f'?app_id={os.getenv("APP_ID")}&app_key={os.getenv("APP_KEY")}'
+    query_url += f'&ingr={ingred_query}&nutrition-type=cooking'
+
+    response_json = requests.get(query_url).json()
+    ingred_json = response_json.get('parsed')
+
+    return ingred_json
 
 def parseCalorieData(ingredientsInfo):
     calories = 0
