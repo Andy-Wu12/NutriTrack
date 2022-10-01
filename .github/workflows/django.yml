@@ -1,5 +1,9 @@
 name: Django CI
 
+env:
+  APP_ID: ${{ secrets.APP_ID }}
+  APP_KEY: ${{ secrets.APP_KEY }}
+
 on:
   push:
     branches: [ "*" ]

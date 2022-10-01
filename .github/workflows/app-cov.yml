@@ -3,6 +3,8 @@ name: Code Coverage CI
 
 env:
   TESTCOVERAGE_THRESHOLD: 90
+  APP_ID: ${{ secrets.APP_ID }}
+  APP_KEY: ${{ secrets.APP_KEY }}
 
 on:
   push:
