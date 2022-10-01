@@ -35,13 +35,13 @@
                 {% endif %}
                 <br/>
                 <div class="log-footer">
-                    <p>
+                    <h3>
                         <a href="{% url 'profiles:user' log.creator.id %}">
                             {{ log.creator.username }}
                         </a>
-                        <br>
+                        <br/>
                         {{ log.pub_date }}
-                    </p>
+                    </h3>
                 </div>
                 {% if user.email == log.creator.email %}
                     <form id="delete-form" action="{% url 'logs:detail' log.id %}" method="post">
