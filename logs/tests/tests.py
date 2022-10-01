@@ -377,7 +377,6 @@ class CreateLogTests(TestCase):
     food_name = 'test food'
     desc = 'test desc'
     ingredients = 'test ingredients'
-    calories = 100
 
     def create_valid_default_log(self, logged_in=True):
         if logged_in:
@@ -385,7 +384,7 @@ class CreateLogTests(TestCase):
             self.client.post(reverse('access:login'), login_form.data)
 
         form_data = {'name': self.food_name, 'desc': self.desc,
-                     'ingredients': self.ingredients, 'calories': self.calories}
+                     'ingredients': self.ingredients}
         self.client.post(reverse('logs:create-log'), form_data)
 
     def setUp(self):
