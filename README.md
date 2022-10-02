@@ -24,7 +24,7 @@ along with the associated ingredients and caloric intake.
 - [x]  Food Logs
     - [x]  Create logs
         - [x]  Manual input for name, description, ingredients, calories
-        - [ ]  Integrate an API to automatically provide nutrition information based on food name input
+        - [x]  Integrate an API to automatically provide nutrition information based on food name input
     - [x]  View other users' logs
     - [x]  Comment on logs
 - [x]  Indexes
@@ -40,6 +40,8 @@ along with the associated ingredients and caloric intake.
     - [x]  Query logs...
         - [x]  by owner's username
         - [x]  by food name
+        
+Additional Features
 - [ ]  User Following
     - [ ]  Users should be able to follow other users
     - [ ]  News feed for logs related to users followed
