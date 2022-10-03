@@ -21,6 +21,5 @@ a:hover {
 }
 
 .textarea-output {
-    white-space: pre;
-    overflow: auto;
+    white-space: pre-line;
 }
