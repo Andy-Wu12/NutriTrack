@@ -22,4 +22,5 @@ a:hover {
 
 .textarea-output {
     white-space: pre-line;
+    overflow-wrap: break-word;
 }
