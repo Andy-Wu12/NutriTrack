@@ -40,19 +40,20 @@ along with the associated ingredients and caloric intake.
     - [x]  Query logs...
         - [x]  by owner's username
         - [x]  by food name
-        
-Additional Features
-- [ ]  User Following
-    - [ ]  Users should be able to follow other users
-    - [ ]  News feed for logs related to users followed
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file:
 
-`SECRET_KEY`, which Django uses for cryptographic signing. 
+1. `SECRET_KEY` - Django uses this for cryptographic signing. 
 Read more about this [here](https://docs.gitguardian.com/secrets-detection/detectors/specifics/django_secret_key)
-
-
+2. `APP_ID` - Generate this key on [Edamam](https://developer.edamam.com/admin/applications) by:
+   1. Signing up 
+   2. Going to **Accounts**, then **Applications**
+   3. Click **Create a new application**
+   4. Select **Nutrition Analysis API**
+   5. Enter a _name_ and _description_ and click **Create Application**
+   6. Copy the value under _Application ID_ and assign it to `APP_ID`
+3. `APP_KEY` - On the same page as before, copy the value under _Application Keys_
 ## Demo
 
 https://awuswe.pythonanywhere.com/
